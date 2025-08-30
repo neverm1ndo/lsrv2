@@ -1,0 +1,29 @@
+{
+	"compilerOptions": {
+		"target": "ESNext",
+		"module": "ESNext",
+		"baseUrl": "./src",
+		"lib": ["ESNext"],
+		"paths": {
+			"@lsrv/core": ["core/index.ts"],
+			"@lsrv/core/http": ["core/http/index.ts"],
+			"@lsrv/core/db": ["core/db/index.ts"],
+			"@lsrv/core/session": ["core/session/index.ts"],
+			"@lsrv/core/socket": ["core/socket/index.ts"],
+			"@lsrv/logger": ["core/logger/logger.ts"],
+			"@lsrv/common": ["common/index.ts"],
+			"@lsrv/models/response": ["models/response/index.ts"],
+			"@lsrv/api/user": ["api/user/index.ts"]
+		},
+		"moduleResolution": "bundler",
+		"outDir": "dist",
+		"importsNotUsedAsValues": "remove",
+		"strict": true,
+		"esModuleInterop": true,
+		"skipLibCheck": true,
+		"forceConsistentCasingInFileNames": true,
+		"types": ["vitest/globals"]
+	},
+	"include": ["src/**/*"],
+	"exclude": ["node_modules"]
+}
