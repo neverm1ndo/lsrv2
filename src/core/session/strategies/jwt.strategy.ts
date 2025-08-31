@@ -23,12 +23,11 @@ export const jwtStrategy = new JWTStrategy(jwtStrategyOptions, ({ id }: JwtUserP
 	void (async () => {
 		try {
 			const [userQueryResult] = await DB_POOL.query(USER_QUERY, [id]);
+
 			const userWithGroups: User[] = z.array(UserSchema).parse(userQueryResult);
 
 			const [user] = userWithGroups;
-			const { username, main_group, avatar } = user;
-
-			const permissions = [...new Set(userWithGroups.map(({ secondary_group }) => secondary_group))];
+			const { username, main_group, avatar, permissions } = user;
 
 			if (!isUserInWorkGroup(user)) {
 				return void done(null, false, { message: "User is not in workgroup" });

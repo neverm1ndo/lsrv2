@@ -12,7 +12,7 @@ export const UserSchema = z.object({
 	email: z.email(),
 	avatar: z.nullable(z.string()),
 	main_group: z.number(),
-	secondary_group: z.number()
+	permissions: z.string().transform((value) => value.split(',').map(Number)).pipe(z.number().array())
 })
 
 export const UserWithPermissionsSchema = UserSchema.extend({

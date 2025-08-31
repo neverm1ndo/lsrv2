@@ -20,7 +20,7 @@ export class AuthService {
 			if (err || !user || !secret) {
 
 				return reject({
-					message: "An error occured.",
+					message: "An error occured",
 					err,
 					status: StatusCodes.UNAUTHORIZED,
 				});
@@ -35,7 +35,7 @@ export class AuthService {
 					});
 			});
 
-			const { id, username, main_group, permissions } = user;
+			const { id, username, main_group, permissions, avatar } = user;
 			const token = sign({ id, username, main_group, permissions }, secret);
 
 			resolve(
@@ -43,6 +43,7 @@ export class AuthService {
 					id,
 					username,
 					main_group,
+                    avatar,
 					permissions,
 					token,
 				}),

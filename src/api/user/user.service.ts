@@ -20,11 +20,9 @@ export class UserService {
 
 			const userWithGroups = z.array(UserSchema).parse(userQueryResult);
 
-			const permissions: number[] = [...new Set(userWithGroups.map(({ secondary_group }) => secondary_group))];
-
 			const [user] = userWithGroups;
 
-			return ServiceResponse.success<UserWithPermissions>("User found", { ...user, permissions });
+			return ServiceResponse.success<UserWithPermissions>("User found", user);
 		} catch (ex) {
 			const errorMessage = `Error finding user with id ${id}:, ${(ex as Error).message}`;
 			logger.error(errorMessage);

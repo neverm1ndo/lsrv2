@@ -47,10 +47,8 @@ export const localStrategy: LocalStrategy = new LocalStrategy(
 					return void done(null, false, { message: "User not found" });
 				}
 
-				const permissions: number[] = [...new Set(userWithGroups.map(({ secondary_group }) => secondary_group))];
-
                 const [user] = userWithGroups;
-				const { id, main_group, username, password: hash } = user;
+				const { id, main_group, username, password: hash, permissions, avatar } = user;
                 
 
 				if (!checkPassword(password, hash)) {
@@ -67,7 +65,8 @@ export const localStrategy: LocalStrategy = new LocalStrategy(
                         id,
                         username,
                         main_group,
-                        permissions
+                        permissions,
+                        avatar
                     }, 
                     { message: "Success" }
                 );

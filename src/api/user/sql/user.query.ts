@@ -1,10 +1,10 @@
 export const USER_QUERY = `
-    SELECT
+     SELECT
         phpbb_user_group.user_id AS id,
         user.username,
         user.user_avatar AS avatar,
         user.group_id AS main_group,
-        phpbb_user_group.group_id AS secondary_group,
+        GROUP_CONCAT(DISTINCT phpbb_user_group.group_id ORDER BY phpbb_user_group.group_id SEPARATOR ',') AS permissions,
         user.user_email AS email,
         user.user_password AS password
     FROM phpbb_user_group
@@ -21,6 +21,13 @@ export const USER_QUERY = `
         ON user.user_id = phpbb_user_group.user_id 
         AND phpbb_user_group.group_id BETWEEN 9 AND 14 
         AND user.user_id = ?
+     GROUP BY
+        user.user_id,
+        user.username,
+        user.user_avatar,
+        user.group_id,
+        user.user_email,
+        user.user_password;
 `;
 
 export const USER_QUERY_BY_EMAIL = `
@@ -29,7 +36,7 @@ export const USER_QUERY_BY_EMAIL = `
         user.username,
         user.user_avatar AS avatar,
         user.group_id AS main_group,
-        phpbb_user_group.group_id AS secondary_group,
+        GROUP_CONCAT(DISTINCT phpbb_user_group.group_id ORDER BY phpbb_user_group.group_id SEPARATOR ',') AS permissions,
         user.user_email AS email,
         user.user_password AS password
     FROM phpbb_user_group
@@ -46,4 +53,11 @@ export const USER_QUERY_BY_EMAIL = `
         ON user.user_id = phpbb_user_group.user_id 
         AND phpbb_user_group.group_id BETWEEN 9 AND 14 
         AND user.user_email = ?
+    GROUP BY
+        user.user_id,
+        user.username,
+        user.user_avatar,
+        user.group_id,
+        user.user_email,
+        user.user_password;
 ` 
