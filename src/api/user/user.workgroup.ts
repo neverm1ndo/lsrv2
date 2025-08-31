@@ -6,7 +6,7 @@ export enum Workgroup {
 	ADMIN,
 	MAPPER,
 	CFR,
-	BACKUPER,
+	BACKUPER
 }
 
 export type WorkgroupName = keyof typeof Workgroup;
@@ -20,7 +20,7 @@ export const isUserInWorkGroup = (user?: User): boolean => {
 };
 
 export const getWorkgorupName = <T extends { main_group: Workgroup | number }>(user?: T): WorkgroupName | undefined => {
-	 if (!user) return;
+	if (!user) return;
 
 	return Workgroup[user.main_group] as WorkgroupName | undefined;
-}
+};

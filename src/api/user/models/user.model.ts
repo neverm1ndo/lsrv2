@@ -12,13 +12,16 @@ export const UserSchema = z.object({
 	email: z.email(),
 	avatar: z.nullable(z.string()),
 	main_group: z.number(),
-	permissions: z.string().transform((value) => value.split(',').map(Number)).pipe(z.number().array())
-})
+	permissions: z
+		.string()
+		.transform((value) => value.split(",").map(Number))
+		.pipe(z.number().array())
+});
 
 export const UserWithPermissionsSchema = UserSchema.extend({
 	permissions: z.array(z.number())
-})
+});
 
 export const GetUserSchema = z.object({
-	params: z.object({ id: Validation.id }),
+	params: z.object({ id: Validation.id })
 });

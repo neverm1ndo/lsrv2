@@ -23,7 +23,7 @@ const envSchema = object({
 	DB_ADDRESS: string(),
 	DB_USER: string(),
 	DB_NAME: string(),
-	DB_PASSWORD: string(),
+	DB_PASSWORD: string()
 });
 
 const parsedEnv = envSchema.safeParse(process.env);
@@ -38,5 +38,5 @@ export const env = {
 	...parsedEnv.data,
 	isDevelopment: parsedEnv.data.NODE_ENV === "development",
 	isProduction: parsedEnv.data.NODE_ENV === "production",
-	isTest: parsedEnv.data.NODE_ENV === "test",
+	isTest: parsedEnv.data.NODE_ENV === "test"
 };

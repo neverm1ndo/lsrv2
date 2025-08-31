@@ -3,8 +3,8 @@ import { lsrv2, server } from "@lsrv/core";
 import { logger } from "@lsrv/logger";
 
 [
-	{ server, port: env.HTTPS_PORT, protocol: 'https' }, // https
-	{ server: lsrv2, port: env.HTTP_PORT, protocol: 'http' }, // http, used for certbot
+	{ server, port: env.HTTPS_PORT, protocol: "https" }, // https
+	{ server: lsrv2, port: env.HTTP_PORT, protocol: "http" } // http, used for certbot
 ].forEach(({ server, port, protocol }) => {
 	const { NODE_ENV, HOST } = env;
 

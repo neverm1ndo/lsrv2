@@ -6,7 +6,7 @@ import express, { type Express } from "express";
 import helmet from "helmet";
 import passport from "passport";
 
-import { BaseRouter } from '@lsrv/api';
+import { BaseRouter } from "@lsrv/api";
 import { CORS_CONFIG, HTTPS_CONFIG } from "@lsrv/core/http";
 import { lsrv2Session } from "@lsrv/core/session";
 

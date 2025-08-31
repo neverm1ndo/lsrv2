@@ -60,4 +60,4 @@ export const USER_QUERY_BY_EMAIL = `
         user.group_id,
         user.user_email,
         user.user_password;
-` 
+`;

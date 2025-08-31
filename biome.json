@@ -36,5 +36,13 @@
 				"noMagicNumbers": "error"
 			}
 		}
+	},
+	"javascript": {
+		"formatter": {
+			"semicolons": "always",
+			"lineEnding": "lf",
+			"operatorLinebreak": "before",
+			"trailingCommas": "none"
+		}
 	}
 }

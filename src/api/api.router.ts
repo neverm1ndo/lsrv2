@@ -18,7 +18,7 @@ const larsRouter = Router();
 //   larsRouter.use('/utils', Guards.developerGuard as Handler, UtilsRouter);
 
 router.use("/auth", authRouter);
-router.use('/health-check', healthRouter);
+router.use("/health-check", healthRouter);
 router.use("/lars", passport.authenticate("jwt", { session: false }), larsRouter);
 
 export { router };

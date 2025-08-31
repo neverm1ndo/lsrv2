@@ -1,1 +1,1 @@
-export { router as BaseRouter } from './api.router';
+export { router as BaseRouter } from "./api.router";

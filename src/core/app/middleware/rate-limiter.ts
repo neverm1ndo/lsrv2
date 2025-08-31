@@ -11,7 +11,7 @@ const rateLimiter = rateLimit({
 	message: "Too many requests, please try again later.",
 	standardHeaders: true,
 	windowMs: RATE_LIMIT_MULTIPLIER * env.COMMON_RATE_LIMIT_WINDOW_MS,
-	keyGenerator: (req: Request) => req.ip as string,
+	keyGenerator: (req: Request) => req.ip as string
 });
 
 export default rateLimiter;

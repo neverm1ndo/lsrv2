@@ -15,10 +15,10 @@ export const lsrv2Session = session({
 	cookie: {
 		maxAge: 31536000000,
 		secure: true,
-		sameSite: "none",
+		sameSite: "none"
 	},
-	store: MongoStore.create({ clientPromise }),
+	store: MongoStore.create({ clientPromise })
 });
 
 passport.use("jwt", jwtStrategy);
-passport.use('local', localStrategy);
+passport.use("local", localStrategy);

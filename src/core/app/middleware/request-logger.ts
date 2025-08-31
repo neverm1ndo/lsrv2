@@ -9,7 +9,7 @@ import { env } from "@lsrv/common/environment";
 
 const logger = pino({
 	level: env.isProduction ? "info" : "debug",
-	transport: env.isProduction ? undefined : { target: "pino-pretty" },
+	transport: env.isProduction ? undefined : { target: "pino-pretty" }
 });
 
 const getLogLevel = (status: number) => {
@@ -40,9 +40,9 @@ const httpLogger = pinoHttp({
 		req: (req) => ({
 			method: req.method,
 			url: req.url,
-			id: req.id,
-		}),
-	},
+			id: req.id
+		})
+	}
 });
 
 const captureResponseBody = (_req: Request, res: Response, next: NextFunction) => {

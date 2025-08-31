@@ -2,7 +2,7 @@ import md5 from "md5";
 import {
 	Strategy as LocalStrategy,
 	type IStrategyOptions as LocalStrategyOptions,
-	type IVerifyOptions as VerifyOptions,
+	type IVerifyOptions as VerifyOptions
 } from "passport-local";
 import z, { ZodError } from "zod";
 
@@ -27,7 +27,7 @@ const checkPassword = (pass?: string, hash?: string): boolean => {
 
 const localStrategyOptions: LocalStrategyOptions = {
 	usernameField: "email",
-	passwordField: "password",
+	passwordField: "password"
 };
 
 export const localStrategy: LocalStrategy = new LocalStrategy(
@@ -35,7 +35,7 @@ export const localStrategy: LocalStrategy = new LocalStrategy(
 	(
 		email: string,
 		password: string,
-		done: (error: unknown, user?: Express.User | false, options?: VerifyOptions) => void,
+		done: (error: unknown, user?: Express.User | false, options?: VerifyOptions) => void
 	) => {
 		void (async () => {
 			try {
@@ -47,9 +47,8 @@ export const localStrategy: LocalStrategy = new LocalStrategy(
 					return void done(null, false, { message: "User not found" });
 				}
 
-                const [user] = userWithGroups;
+				const [user] = userWithGroups;
 				const { id, main_group, username, password: hash, permissions, avatar } = user;
-                
 
 				if (!checkPassword(password, hash)) {
 					return void done(null, false, { message: "Wrong password" });
@@ -60,28 +59,28 @@ export const localStrategy: LocalStrategy = new LocalStrategy(
 				}
 
 				return void done(
-                    null,
-                    {
-                        id,
-                        username,
-                        main_group,
-                        permissions,
-                        avatar
-                    }, 
-                    { message: "Success" }
-                );
+					null,
+					{
+						id,
+						username,
+						main_group,
+						permissions,
+						avatar
+					},
+					{ message: "Success" }
+				);
 			} catch (error) {
-                const err = {
-                    message: ''
-                };
+				const err = {
+					message: ""
+				};
 
-                if (error instanceof ZodError) {
-                    console.error(error);
-                    err.message = error.issues.map(({ message }) => message).join('. ');
-                }
+				if (error instanceof ZodError) {
+					console.error(error);
+					err.message = error.issues.map(({ message }) => message).join(". ");
+				}
 
 				return void done(err);
 			}
 		})();
-	},
+	}
 );

@@ -17,5 +17,5 @@ export const CORS_CONFIG: CorsOptions = {
 	methods: "GET,HEAD,OPTIONS,PUT,PATCH,POST,DELETE",
 	origin: checkCorsOrigin,
 	preflightContinue: false,
-	optionsSuccessStatus: 204,
+	optionsSuccessStatus: 204
 };

@@ -18,11 +18,10 @@ export class AuthService {
 
 		passport.authenticate("local", { session: false }, (err: unknown, user: UserSession) => {
 			if (err || !user || !secret) {
-
 				return reject({
 					message: "An error occured",
 					err,
-					status: StatusCodes.UNAUTHORIZED,
+					status: StatusCodes.UNAUTHORIZED
 				});
 			}
 
@@ -31,7 +30,7 @@ export class AuthService {
 					reject({
 						message: "Unexpected error",
 						body: err,
-						status: StatusCodes.INTERNAL_SERVER_ERROR,
+						status: StatusCodes.INTERNAL_SERVER_ERROR
 					});
 			});
 
@@ -43,10 +42,10 @@ export class AuthService {
 					id,
 					username,
 					main_group,
-                    avatar,
+					avatar,
 					permissions,
-					token,
-				}),
+					token
+				})
 			);
 		})(req);
 

@@ -16,7 +16,7 @@ const JwtUserPayloadSchema = UserWithPermissionsSchema.pick({
 
 const jwtStrategyOptions: JWTStrategyOptions = {
 	jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-	secretOrKey: env.LSRV_SECRET,
+	secretOrKey: env.LSRV_SECRET
 };
 
 export const jwtStrategy = new JWTStrategy(jwtStrategyOptions, ({ id }: JwtUserPayload, done) => {
