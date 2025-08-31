@@ -5,7 +5,7 @@ import { StatusCodes } from "http-status-codes";
 import pino from "pino";
 import pinoHttp from "pino-http";
 
-import { env } from "@lsrv/common";
+import { env } from "@lsrv/common/environment";
 
 const logger = pino({
 	level: env.isProduction ? "info" : "debug",

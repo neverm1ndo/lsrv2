@@ -1,14 +1,14 @@
-import { env } from "@lsrv/common";
+import { env } from "@lsrv/common/environment";
 import { lsrv2, server } from "@lsrv/core";
 import { logger } from "@lsrv/logger";
 
 [
-	{ server, port: env.HTTPS_PORT }, // https
-	{ server: lsrv2, port: env.HTTP_PORT }, // http, used for certbot
-].forEach(({ server, port }) => {
+	{ server, port: env.HTTPS_PORT, protocol: 'https' }, // https
+	{ server: lsrv2, port: env.HTTP_PORT, protocol: 'http' }, // http, used for certbot
+].forEach(({ server, port, protocol }) => {
 	const { NODE_ENV, HOST } = env;
 
-	server.listen(port, () => logger.info(`Server (${NODE_ENV}) running on port http://${HOST}:${port}`));
+	server.listen(port, () => logger.info(`Server (${NODE_ENV}) running on port ${protocol}://${HOST}:${port}`));
 });
 
 const onCloseSignal = () => {

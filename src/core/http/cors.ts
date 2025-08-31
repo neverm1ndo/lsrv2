@@ -1,6 +1,6 @@
 import type { CorsOptions } from "cors";
 
-import { env } from "@lsrv/common";
+import { env } from "@lsrv/common/environment";
 
 const { CORS_WHITELIST } = env;
 

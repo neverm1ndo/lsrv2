@@ -1,9 +1,8 @@
+import type { MongoClient } from "mongodb";
 import { connect } from "mongoose";
 
-import { env } from "@lsrv/common";
+import { env } from "@lsrv/common/environment";
 
-const {
-	connection: { getClient: getMongoClient },
-} = await connect(env.MONGO_URL);
+const clientPromise: Promise<MongoClient> = connect(env.MONGO_URL).then(({ connection }) => connection.getClient());
 
-export { getMongoClient };
+export { clientPromise };

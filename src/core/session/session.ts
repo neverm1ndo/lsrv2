@@ -2,10 +2,11 @@ import MongoStore from "connect-mongo";
 import session from "express-session";
 import passport from "passport";
 
-import { env } from "@lsrv/common";
-import { getMongoClient } from "@lsrv/core/db";
+import { env } from "@lsrv/common/environment";
+import { clientPromise } from "@lsrv/core/db";
 
 import { jwtStrategy } from "./strategies/jwt.strategy";
+import { localStrategy } from "./strategies/local.strategy";
 
 export const lsrv2Session = session({
 	secret: env.LSRV_SECRET,
@@ -16,7 +17,8 @@ export const lsrv2Session = session({
 		secure: true,
 		sameSite: "none",
 	},
-	store: MongoStore.create({ client: getMongoClient() }),
+	store: MongoStore.create({ clientPromise }),
 });
 
 passport.use("jwt", jwtStrategy);
+passport.use('local', localStrategy);

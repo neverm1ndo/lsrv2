@@ -1,24 +1,24 @@
 import { z } from "zod";
 
+import { Validation } from "@lsrv/common/validation";
+
 export type User = z.infer<typeof UserSchema>;
+export type UserWithPermissions = z.infer<typeof UserWithPermissionsSchema>;
 
 export const UserSchema = z.object({
 	id: z.number(),
 	username: z.string(),
 	password: z.string(),
 	email: z.email(),
-	avatar: z.nullable(z.url()),
+	avatar: z.nullable(z.string()),
 	main_group: z.number(),
-	sercondary_group: z.number(),
-	permissions: z.array(z.number()),
-});
+	secondary_group: z.number()
+})
 
-export interface AdminUserData {
-	user_id: number;
-	username: string;
-	user_avatar: string;
-	main_group: number;
-	secondary_group?: number;
-	permissions: number[] | Set<number>;
-	user_email?: string;
-}
+export const UserWithPermissionsSchema = UserSchema.extend({
+	permissions: z.array(z.number())
+})
+
+export const GetUserSchema = z.object({
+	params: z.object({ id: Validation.id }),
+});
