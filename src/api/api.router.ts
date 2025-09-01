@@ -8,14 +8,6 @@ const router = Router();
 
 // LARS API router
 const larsRouter = Router();
-//   larsRouter.use('/bans', BansRouter);
-//   larsRouter.use('/logs', LogsRouter);
-//   larsRouter.use('/maps', Guards.mapperGuard as Handler, MapsRouter);
-//   larsRouter.use('/configs', Guards.configuratorGuard as Handler, ConfigsRouter);
-//   larsRouter.use('/admins', AdminsRouter);
-//   larsRouter.use('/backups', Guards.backuperGuard as Handler, BackupsRouter);
-//   larsRouter.use('/stats', StatsRouter);
-//   larsRouter.use('/utils', Guards.developerGuard as Handler, UtilsRouter);
 
 router.use("/auth", authRouter);
 router.use("/health-check", healthRouter);
