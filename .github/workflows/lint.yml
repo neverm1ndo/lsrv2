@@ -1,0 +1,19 @@
+name: Biome (Lint, Format)
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, edited]
+
+permissions:
+  contents: read
+
+jobs:
+  biome-and-lint:
+    name: Biome format & lint
+    uses: ./.github/workflows/ci-setup.yml
+    with:
+      node-version: "24"
+      commands: |
+        # Format check
+        npx biome format . --check
+        # Lint / static checks
+        npx biome check
