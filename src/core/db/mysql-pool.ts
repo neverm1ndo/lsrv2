@@ -1,10 +1,10 @@
 import { createPool } from "mysql2";
 
-import { env } from "@lsrv/common";
+import { env } from "@lsrv/common/environment";
 
 export const DB_POOL = createPool({
 	host: env.DB_ADDRESS,
 	user: env.DB_USER,
 	database: env.DB_NAME,
-	password: env.DB_PASSWORD,
+	password: env.DB_PASSWORD
 }).promise();

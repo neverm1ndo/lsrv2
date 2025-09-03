@@ -26,7 +26,7 @@ const createIoServer = (server: HttpsServer, options: Partial<IoServerOptions>):
 const bootstrapIo = <User = unknown>(
 	server: HttpsServer,
 	options: Partial<IoServerOptions>,
-	middlewares: ((...args: unknown[]) => Handler)[],
+	middlewares: ((...args: unknown[]) => Handler)[]
 ) => {
 	const io = createIoServer(server, options);
 
@@ -45,5 +45,5 @@ export const io: IoServer = bootstrapIo(server, { cors: CORS_CONFIG }, [
 	lsrv2Session,
 	passport.authenticate("jwt"),
 	passport.initialize(),
-	passport.session(),
+	passport.session()
 ]);

@@ -1,6 +1,6 @@
 import type { CorsOptions } from "cors";
 
-import { env } from "@lsrv/common";
+import { env } from "@lsrv/common/environment";
 
 const { CORS_WHITELIST } = env;
 
@@ -17,5 +17,5 @@ export const CORS_CONFIG: CorsOptions = {
 	methods: "GET,HEAD,OPTIONS,PUT,PATCH,POST,DELETE",
 	origin: checkCorsOrigin,
 	preflightContinue: false,
-	optionsSuccessStatus: 204,
+	optionsSuccessStatus: 204
 };

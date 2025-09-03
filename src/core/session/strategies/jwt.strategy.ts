@@ -1,30 +1,22 @@
 import { ExtractJwt, Strategy as JWTStrategy, type StrategyOptions as JWTStrategyOptions } from "passport-jwt";
 import z from "zod";
 
-import { USER_QUERY, type User, UserSchema, Workgroup } from "@lsrv/api/user";
-import { lsrv2 } from "@lsrv/core";
+import { isUserInWorkGroup, USER_QUERY, type User, UserSchema, UserWithPermissionsSchema } from "@lsrv/api/user";
+import { env } from "@lsrv/common/environment";
 import { DB_POOL } from "@lsrv/core/db";
 
 export type JwtUserPayload = z.infer<typeof JwtUserPayloadSchema>;
 
-const JwtUserPayloadSchema = z.object({
-	id: z.number(),
-	username: z.string(),
-	main_group: z.number(),
-	permissions: z.array(z.number()),
+const JwtUserPayloadSchema = UserWithPermissionsSchema.pick({
+	id: true,
+	username: true,
+	main_group: true,
+	permissions: true
 });
-
-const isUserInWorkGroup = (user?: User): boolean => {
-	if (!user) return false;
-
-	const isInWorkGroup = Boolean<string | undefined>(Workgroup[user.main_group]);
-
-	return isInWorkGroup;
-};
 
 const jwtStrategyOptions: JWTStrategyOptions = {
 	jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-	secretOrKey: lsrv2.get("secret"),
+	secretOrKey: env.LSRV_SECRET
 };
 
 export const jwtStrategy = new JWTStrategy(jwtStrategyOptions, ({ id }: JwtUserPayload, done) => {
@@ -32,18 +24,22 @@ export const jwtStrategy = new JWTStrategy(jwtStrategyOptions, ({ id }: JwtUserP
 		try {
 			const [userQueryResult] = await DB_POOL.query(USER_QUERY, [id]);
 
-			const userWithGroups = z.array(UserSchema).parse(userQueryResult);
-
-			const userPermissions: number[] = [...new Set(userWithGroups.map(({ sercondary_group }) => sercondary_group))];
+			const userWithGroups: User[] = z.array(UserSchema).parse(userQueryResult);
 
 			const [user] = userWithGroups;
-			user.permissions = userPermissions;
+			const { username, main_group, avatar, permissions } = user;
 
 			if (!isUserInWorkGroup(user)) {
 				return void done(null, false, { message: "User is not in workgroup" });
 			}
 
-			return void done(null, user);
+			return void done(null, {
+				id,
+				username,
+				main_group,
+				permissions,
+				avatar
+			});
 		} catch (error) {
 			return void done(error);
 		}
