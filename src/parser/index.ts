@@ -1,1 +1,1 @@
-export * from './peg/peggy.parser-adapter';
+export * from "./peg/peggy.parser-adapter";

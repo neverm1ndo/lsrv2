@@ -10,4 +10,4 @@ const addErrorToRequestLog: ErrorRequestHandler = (err, _req, res, next) => {
 	next(err);
 };
 
-export const errorHandler =  (): [RequestHandler, ErrorRequestHandler] => [unexpectedRequest, addErrorToRequestLog];
+export const errorHandler = (): [RequestHandler, ErrorRequestHandler] => [unexpectedRequest, addErrorToRequestLog];

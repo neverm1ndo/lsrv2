@@ -6,9 +6,7 @@ import { logger } from "@lsrv/logger";
 import { logsService } from "./logs.service";
 
 class LogsController {
-    public search = async (req: Request, res: Response) => {
-        
-    }
+	public search = async (req: Request, res: Response) => {};
 }
 
 export const logsController = new LogsController();

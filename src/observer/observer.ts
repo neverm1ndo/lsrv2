@@ -69,7 +69,7 @@ export class Observer {
 			}
 		});
 
-		this.bytes = stats.size
+		this.bytes = stats.size;
 	}
 
 	private fsWatcherNewFileHandler(_path: string, stats?: Stats | undefined): void {

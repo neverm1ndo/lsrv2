@@ -15,7 +15,6 @@ import { bootstrapIo } from "@lsrv/core/socket";
 
 import { LsrvLogsObserver } from "./logs.observer";
 
-
 // Application
 const lsrv2: Express = express();
 const server: Server = createServer(HTTPS_CONFIG, lsrv2);

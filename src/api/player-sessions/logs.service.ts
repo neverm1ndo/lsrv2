@@ -1,15 +1,9 @@
 export class LogsService {
-    async search() {
-        
-    }
+	async search() {}
 
-    async getLast() {
+	async getLast() {}
 
-    }
-
-    private parseOuery() {
-
-    }
+	private parseOuery() {}
 }
 
 export const logsService = new LogsService();

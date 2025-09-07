@@ -5,9 +5,7 @@ export interface ParseMethod<T> {
 }
 
 export abstract class ParserAdapter {
-	constructor(
-        protected encode: boolean = true
-    ) {}
+	constructor(protected encode: boolean = true) {}
 
 	protected _toUTF8(value: string | Buffer): string {
 		const result =

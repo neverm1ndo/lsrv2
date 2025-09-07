@@ -62,54 +62,54 @@ export const LogLineSchema = z.object({
 });
 
 const MLogTimeSchema = new Schema(
-  {
-    hours: { type: Number },
-    minutes: { type: Number },
-    seconds: { type: Number },
-  },
-  { _id: false }
+	{
+		hours: { type: Number },
+		minutes: { type: Number },
+		seconds: { type: Number }
+	},
+	{ _id: false }
 );
 
 const MLogPlayerSchema = new Schema(
-  {
-    nickname: { type: String, required: true },
-    id: { type: Number, required: true },
-  },
-  { _id: false }
+	{
+		nickname: { type: String, required: true },
+		id: { type: Number, required: true }
+	},
+	{ _id: false }
 );
 
 const MLogSerialsSchema = new Schema(
-  {
-    props: { type: [String], required: true },
-    cn: { type: String, required: true },
-    cc: { type: String, required: true },
-    id: { type: String, required: true },
-    as: { type: Number, required: true },
-    ss: { type: String, required: true },
-    org: { type: String, required: true },
-    cli: { type: String, required: true },
-  },
-  { _id: false }
+	{
+		props: { type: [String], required: true },
+		cn: { type: String, required: true },
+		cc: { type: String, required: true },
+		id: { type: String, required: true },
+		as: { type: Number, required: true },
+		ss: { type: String, required: true },
+		org: { type: String, required: true },
+		cli: { type: String, required: true }
+	},
+	{ _id: false }
 );
 
 const MLogSubjectSchema = new Schema(
-  {
-    nickname: { type: String, required: true },
-    id: { type: Number, required: true },
-    admin: {
-      type: {
-        id: { type: Number, required: true },
-        name: { type: String, required: true },
-      },
-      required: false,
-    },
-    role: {
-      type: String,
-      enum: ["Администратор", "Игрок", "Разработчик"],
-      required: false,
-    },
-  },
-  { _id: false }
+	{
+		nickname: { type: String, required: true },
+		id: { type: Number, required: true },
+		admin: {
+			type: {
+				id: { type: Number, required: true },
+				name: { type: String, required: true }
+			},
+			required: false
+		},
+		role: {
+			type: String,
+			enum: ["Администратор", "Игрок", "Разработчик"],
+			required: false
+		}
+	},
+	{ _id: false }
 );
 
 /**
@@ -119,31 +119,31 @@ const MLogSubjectSchema = new Schema(
  *   Для этого вложенная схема создаётся с опцией strict: false.
  */
 const MEditorActionSchema = new Schema(
-  {
-    editor_id: { type: Number, required: true },
-    group: { type: String, enum: ["owner", "guest"], required: true },
-  },
-  { _id: false, strict: false } // strict:false позволяет сохранять дополнительные ключи
+	{
+		editor_id: { type: Number, required: true },
+		group: { type: String, enum: ["owner", "guest"], required: true }
+	},
+	{ _id: false, strict: false } // strict:false позволяет сохранять дополнительные ключи
 );
 
 const MLogLineSchema = new Schema<LogLine>(
-  {
-    unix: { type: Number, required: true },
-    date: { type: String, required: true },
-    process: { type: String, required: true },
-    player: { type: MLogPlayerSchema, required: true },
-    time: { type: MLogTimeSchema },
-    numbers: { type: [Number] },
-    subject: { type: MLogSubjectSchema },
-    death: { type: String },
-    message: { type: String },
-    serials: { type: MLogSerialsSchema },
-    editor: { type: MEditorActionSchema },
-  },
-  {
-    // по умолчанию _id генерируется для документов; вложенные схемы уже выключают _id где нужно
-    timestamps: false,
-  }
+	{
+		unix: { type: Number, required: true },
+		date: { type: String, required: true },
+		process: { type: String, required: true },
+		player: { type: MLogPlayerSchema, required: true },
+		time: { type: MLogTimeSchema },
+		numbers: { type: [Number] },
+		subject: { type: MLogSubjectSchema },
+		death: { type: String },
+		message: { type: String },
+		serials: { type: MLogSerialsSchema },
+		editor: { type: MEditorActionSchema }
+	},
+	{
+		// по умолчанию _id генерируется для документов; вложенные схемы уже выключают _id где нужно
+		timestamps: false
+	}
 );
 
 export const LogLineModel = model<LogLine>("LogLine", MLogLineSchema);
