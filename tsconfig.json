@@ -5,12 +5,15 @@
 		"baseUrl": "./src",
 		"lib": ["ESNext"],
 		"paths": {
-			"@lsrv/core": ["core/index.ts"],
+			"@lsrv/app": ["app/lsrv2.ts"],
 			"@lsrv/core/http": ["core/http/index.ts"],
 			"@lsrv/core/db": ["core/db/index.ts"],
 			"@lsrv/core/session": ["core/session/index.ts"],
 			"@lsrv/core/socket": ["core/socket/index.ts"],
+			"@lsrv/core/middlewares": ["core/middleware/index.ts"],
 			"@lsrv/logger": ["core/logger/logger.ts"],
+			"@lsrv/parser": ["parser/index.ts"],
+			"@lsrv/observer": ["observer/index.ts"],
 			"@lsrv/common/environment": ["common/env/index.ts"],
 			"@lsrv/common/validation": ["common/validation/index.ts"],
 			"@lsrv/common/models": ["common/models/index.ts"],
@@ -18,7 +21,8 @@
 			"@lsrv/api": ["api/index.ts"],
 			"@lsrv/api/user": ["api/user/index.ts"],
 			"@lsrv/api/auth": ["api/auth/index.ts"],
-			"@lsrv/api/health": ["api/health/index.ts"]
+			"@lsrv/api/health": ["api/health/index.ts"],
+			"@lsrv/api/logs": ["api/player-sessions/index.ts"]
 		},
 		"moduleResolution": "bundler",
 		"outDir": "dist",

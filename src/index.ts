@@ -1,5 +1,5 @@
+import { lsrv2, server } from "@lsrv/app";
 import { env } from "@lsrv/common/environment";
-import { lsrv2, server } from "@lsrv/core";
 import { logger } from "@lsrv/logger";
 
 [

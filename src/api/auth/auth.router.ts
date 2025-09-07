@@ -11,4 +11,4 @@ export const authRouter: Router = express.Router();
 authRouter.get("/", passport.authenticate("jwt", { session: false }), authController.auth);
 authRouter.get("/logout", passport.authenticate("jwt"), authController.logout);
 
-authRouter.post("/session", json(), validateRequest(GetSessionRequesSchema), authController.session);
+authRouter.post("/session", json(), authController.session);
