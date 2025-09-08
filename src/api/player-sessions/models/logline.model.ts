@@ -20,7 +20,7 @@ export const LogPlayerSchema = z.object({
 });
 
 export const LogSerialsSchema = z.object({
-	props: z.string().array(),
+	country: z.string(),
 	cn: z.string(),
 	cc: z.string(),
 	id: z.string(),
@@ -51,13 +51,13 @@ export const LogLineSchema = z.object({
 	unix: z.number(),
 	date: z.string(),
 	process: z.string(),
-	player: LogPlayerSchema,
+	user: LogPlayerSchema,
 	time: LogTimeSchema.optional(),
 	numbers: z.number().array().optional(),
 	subject: LogSubjectSchema.optional(),
 	death: z.string().optional(),
 	message: z.string().optional(),
-	serials: LogSerialsSchema.optional(),
+	serials: LogSerialsSchema.partial().optional(),
 	editor: EditorActionSchema.optional()
 });
 
@@ -73,21 +73,21 @@ const MLogTimeSchema = new Schema(
 const MLogPlayerSchema = new Schema(
 	{
 		nickname: { type: String, required: true },
-		id: { type: Number, required: true }
+		id: { type: Number }
 	},
 	{ _id: false }
 );
 
 const MLogSerialsSchema = new Schema(
 	{
-		props: { type: [String], required: true },
-		cn: { type: String, required: true },
-		cc: { type: String, required: true },
-		id: { type: String, required: true },
-		as: { type: Number, required: true },
-		ss: { type: String, required: true },
-		org: { type: String, required: true },
-		cli: { type: String, required: true }
+		country: { type: String },
+		cn: { type: String },
+		cc: { type: String },
+		id: { type: String },
+		as: { type: Number },
+		ss: { type: String },
+		org: { type: String },
+		cli: { type: String }
 	},
 	{ _id: false }
 );
@@ -126,19 +126,20 @@ const MEditorActionSchema = new Schema(
 	{ _id: false, strict: false } // strict:false позволяет сохранять дополнительные ключи
 );
 
-const MLogLineSchema = new Schema<LogLine>(
+const MLogLineSchema = new Schema<LogLine & { multi?: number }>(
 	{
 		unix: { type: Number, required: true },
 		date: { type: String, required: true },
 		process: { type: String, required: true },
-		player: { type: MLogPlayerSchema, required: true },
+		user: { type: MLogPlayerSchema, required: true },
 		time: { type: MLogTimeSchema },
-		numbers: { type: [Number] },
+		numbers: { type: [Number], default: undefined },
 		subject: { type: MLogSubjectSchema },
 		death: { type: String },
 		message: { type: String },
 		serials: { type: MLogSerialsSchema },
-		editor: { type: MEditorActionSchema }
+		editor: { type: MEditorActionSchema },
+		multi: { type: Number, default: undefined }
 	},
 	{
 		// по умолчанию _id генерируется для документов; вложенные схемы уже выключают _id где нужно

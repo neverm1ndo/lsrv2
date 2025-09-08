@@ -22,7 +22,7 @@ export class LsrvLogsObserver<L extends LogLine = LogLine> {
 		if (this.dataStream) return;
 
 		this.dataStream = this.observer.observe();
-		this.dataStream.on("data", this.handleObservedData);
+		this.dataStream.on("data", this.handleObservedData.bind(this));
 	}
 
 	addLstener(event: string | symbol, listener: (...args: unknown[]) => void) {
@@ -38,7 +38,7 @@ export class LsrvLogsObserver<L extends LogLine = LogLine> {
 	private async _save(line: L): Promise<void> {
 		if (this._isSimilarLine(line, this.last) && this.document) {
 			return void this.document
-				.updateOne({ $inc: { multiplier: 1 } })
+				.updateOne({ $inc: { multi: 1 } })
 				.catch((err) => logger.error(err, "Update similar line multiplier error"));
 		}
 

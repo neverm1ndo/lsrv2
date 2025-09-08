@@ -21,7 +21,7 @@ start
 logline
     =
     	unix:unix ws
-        date:date ws
+        date:datetime ws
         process:process
         user:user
         time:humanized_time?
@@ -53,11 +53,21 @@ logline
                 return deleteNullValues(line);
             }
 
+// Date and time
+
 unix "unix"
 	= number
     
-date "date"
-	= number "T" number { return text() }
+datetime "date"
+	= year:year month:pad_num day:pad_num "T" hour:pad_num minute:pad_num second:pad_num {
+        return text();
+    }
+
+pad_num
+    = digits:$(DIGIT DIGIT) { return digits; }
+
+year 
+    = digits:$(DIGIT DIGIT DIGIT DIGIT) { return digits; }
 
 humanized_time "humanized_time"
 	= ws 
@@ -110,12 +120,12 @@ end_process       = ws ">" ws
 begin_id          = ws "(" ws
 end_id            = ws ")" ws
 
+// Tokens
+
 ws "whitespace" = [ \t\n\r]*
 
 space "space"
 	= " "
-
-// Tokens
 
 process "process" 
 	= begin_process head:word tail:(process_separator word)* end_process { 

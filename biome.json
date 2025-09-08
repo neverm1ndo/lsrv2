@@ -3,12 +3,14 @@
 	"vcs": { "enabled": false, "clientKind": "git", "useIgnoreFile": false },
 	"files": {
 		"ignoreUnknown": false,
-		"includes": ["**", "!**/*.parser.js", "!**/*.spec.ts", "!**/dist/*", "!**/node_modules/**/*"]
+		"includes": ["**", "!**/*.parser.js", "!**/*.parser.d.ts", "!**/*.spec.ts", "!**/dist/*", "!**/node_modules/**/*"]
 	},
 	"formatter": {
 		"enabled": true,
 		"lineWidth": 120,
-		"bracketSpacing": true
+		"bracketSpacing": true,
+		"lineEnding": "lf",
+		"formatWithErrors": true
 	},
 	"assist": {
 		"actions": {
@@ -24,8 +26,7 @@
 							["@lsrv/**"],
 							":BLANK_LINE:",
 							":PATH:"
-						],
-						"identifierOrder": "natural"
+						]
 					}
 				}
 			}
@@ -35,13 +36,21 @@
 		"enabled": true,
 		"rules": {
 			"recommended": true,
+			"correctness": {
+				"noUnusedImports": {
+					"level": "error",
+					"fix": "safe"
+				}
+			},
 			"style": {
-				"noMagicNumbers": "error"
+				"noMagicNumbers": "error",
+				"noCommonJs": "error"
 			}
 		}
 	},
 	"javascript": {
 		"formatter": {
+			"enabled": true,
 			"semicolons": "always",
 			"lineEnding": "lf",
 			"operatorLinebreak": "before",

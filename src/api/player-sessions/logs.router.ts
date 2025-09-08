@@ -1,11 +1,10 @@
-import express, { json, type Router } from "express";
-import passport from "passport";
+import express, { type Router } from "express";
 
-import { validateRequest } from "@lsrv/common/validation";
+import { logsController } from "./logs.controller";
 
-export const authRouter: Router = express.Router();
+export const logsRouter: Router = express.Router();
 
-// authRouter.get("/last", logsController.auth);
+logsRouter.get("/last", logsController.last);
 // authRouter.get("/search", passport.authenticate("jwt"), logsController.logout);
 
 // authRouter.post("/sessions", json(), validateRequest(GetSessionRequesSchema), logsController.session);
