@@ -1,3 +1,4 @@
+name: Reusable CI Workflows
 on:
   workflow_call:
     inputs:

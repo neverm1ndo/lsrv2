@@ -3,7 +3,15 @@
 	"vcs": { "enabled": false, "clientKind": "git", "useIgnoreFile": false },
 	"files": {
 		"ignoreUnknown": false,
-		"includes": ["**", "!**/*.parser.js", "!**/*.parser.d.ts", "!**/*.spec.ts", "!**/dist/*", "!**/node_modules/**/*"]
+		"includes": [
+			"**",
+			"!**/*.parser.js",
+			"!peggy.config.mjs",
+			"!**/*.parser.d.ts",
+			"!**/*.spec.ts",
+			"!**/dist/*",
+			"!**/node_modules/**/*"
+		]
 	},
 	"formatter": {
 		"enabled": true,
