@@ -1,15 +1,19 @@
 name: Build
 on:
-  pull_request:
+  workflow_run:
+    workflows:
+      - "Biome"
+      - "Tests (Vitest)"
     types:
-      - "opened"
-      - "reopened"
+      - completed
 
 jobs:
-  on-success:
+  build:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     name: Build
     uses: ./.github/workflows/ci-setup.yml
     with:
-      node-version: "22"
+      node-version: "20"
       commands: |
+        yarn peggy:build
         yarn build

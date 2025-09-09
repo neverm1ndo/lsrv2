@@ -11,7 +11,7 @@ jobs:
     name: Run Vitest
     uses: ./.github/workflows/ci-setup.yml
     with:
-      node-version: "22"
+      node-version: "24"
       commands: |
         # run tests in CI mode
         yarn test

@@ -1,7 +1,7 @@
 {
 	"name": "lsrv2",
 	"version": "0.0.1",
-	"description": "New generation LARS server",
+	"description": "New generation LAR server",
 	"main": "index.ts",
 	"author": "neverm1ndo",
 	"license": "MIT",
@@ -9,6 +9,7 @@
 	"scripts": {
 		"serve": "node --import=tsx --watch src/index.ts",
 		"build": "tsc && tsup",
+		"peggy:build": "peggy -c peggy.config.mjs",
 		"check": "yarn exec biome check --write",
 		"test": "vitest run"
 	},
