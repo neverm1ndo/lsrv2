@@ -1,5 +1,8 @@
 name: Build
 on:
+  pull_request:
+    types:
+      - "opened"
   workflow_run:
     workflows:
       - "Biome"
