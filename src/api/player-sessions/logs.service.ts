@@ -19,7 +19,7 @@ export class LogsService {
 
 		const lines = await LogLineModel.find(rootFilterQuery)
 			.limit(query.limit)
-			.sort({ unix: -1 })
+			.sort({ unix: 1 })
 			.where("process")
 			.nin(query.filter)
 			.lean()
