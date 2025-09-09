@@ -23,7 +23,8 @@ const envSchema = object({
 	DB_ADDRESS: string(),
 	DB_USER: string(),
 	DB_NAME: string(),
-	DB_PASSWORD: string()
+	DB_PASSWORD: string(),
+	LOGS_PATH: string()
 });
 
 const parsedEnv = envSchema.safeParse(process.env);

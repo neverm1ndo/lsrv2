@@ -1,3 +1,4 @@
+name: Reusable CI Workflows
 on:
   workflow_call:
     inputs:
@@ -14,14 +15,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
       - name: Use Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
-          node-version: ${{ inputs.node-version }}
+          node-version: "24"
 
       - name: Restore yarn & node_modules cache
         uses: actions/cache@v4

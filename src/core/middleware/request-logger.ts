@@ -56,4 +56,4 @@ const captureResponseBody = (_req: Request, res: Response, next: NextFunction) =
 	next();
 };
 
-export default [addRequestId, captureResponseBody, httpLogger];
+export const requestLogger = [addRequestId, captureResponseBody, httpLogger];

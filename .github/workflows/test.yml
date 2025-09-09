@@ -1,13 +1,13 @@
 name: Tests (Vitest)
 on:
   pull_request:
-    types: [opened, synchronize, reopened, edited]
+    branches: [main]
 
 permissions:
   contents: read
 
 jobs:
-  vitest:
+  on-success:
     name: Run Vitest
     uses: ./.github/workflows/ci-setup.yml
     with:

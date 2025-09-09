@@ -1,14 +1,14 @@
-name: Biome (Lint, Format)
+name: Biome
 on:
   pull_request:
-    types: [opened, synchronize, reopened, edited]
+    branches: [main]
 
 permissions:
   contents: read
 
 jobs:
-  biome-and-lint:
-    name: Biome format & lint
+  format-and-lint:
+    name: Format & lint
     uses: ./.github/workflows/ci-setup.yml
     with:
       node-version: "24"

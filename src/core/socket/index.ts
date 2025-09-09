@@ -2,12 +2,7 @@ import type { IncomingMessage } from "node:http";
 import type { Server as HttpsServer } from "node:https";
 
 import type { Handler } from "express";
-import passport from "passport";
 import { type ExtendedError, Server as IoServer, type ServerOptions as IoServerOptions, type Socket } from "socket.io";
-
-import { server } from "@lsrv/core";
-import { CORS_CONFIG } from "@lsrv/core/http";
-import { lsrv2Session } from "@lsrv/core/session";
 
 export interface IIncomingMessage<User> extends IncomingMessage {
 	user?: User;
@@ -23,7 +18,7 @@ const wrap = (middleware: (...args: unknown[]) => Handler) => (socket: Socket, n
 const createIoServer = (server: HttpsServer, options: Partial<IoServerOptions>): IoServer =>
 	new IoServer(server, options);
 
-const bootstrapIo = <User = unknown>(
+export const bootstrapIo = <User = unknown>(
 	server: HttpsServer,
 	options: Partial<IoServerOptions>,
 	middlewares: ((...args: unknown[]) => Handler)[]
@@ -40,10 +35,3 @@ const bootstrapIo = <User = unknown>(
 
 	return io;
 };
-
-export const io: IoServer = bootstrapIo(server, { cors: CORS_CONFIG }, [
-	lsrv2Session,
-	passport.authenticate("jwt"),
-	passport.initialize(),
-	passport.session()
-]);
