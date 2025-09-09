@@ -112,12 +112,6 @@ const MLogSubjectSchema = new Schema(
 	{ _id: false }
 );
 
-/**
- * EditorAction:
- * - определены обязательные поля editor_id и group
- * - допускаются произвольные дополнительные ключи (string -> string|number)
- *   Для этого вложенная схема создаётся с опцией strict: false.
- */
 const MEditorActionSchema = new Schema(
 	{
 		editor_id: { type: Number, required: true },
@@ -142,9 +136,8 @@ const MLogLineSchema = new Schema<LogLine & { multi?: number }>(
 		multi: { type: Number, default: undefined }
 	},
 	{
-		// по умолчанию _id генерируется для документов; вложенные схемы уже выключают _id где нужно
 		timestamps: false
 	}
 );
 
-export const LogLineModel = model<LogLine>("LogLine", MLogLineSchema);
+export const LogLineModel = model<LogLine & { multi?: number }>("LogLine", MLogLineSchema);
