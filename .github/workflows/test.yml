@@ -2,6 +2,10 @@ name: Tests (Vitest)
 on:
   pull_request:
     types: [opened, synchronize, reopened, edited]
+  workflow_run:
+    workflows: [Biome]
+    types:
+      - completed
 
 permissions:
   contents: read
