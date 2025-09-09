@@ -11,7 +11,7 @@ jobs:
     name: Format & lint
     uses: ./.github/workflows/ci-setup.yml
     with:
-      node-version: "24"
+      node-version: "22"
       commands: |
         # Format check
         npx biome format . --check

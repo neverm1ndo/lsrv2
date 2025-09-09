@@ -4,7 +4,7 @@ on:
       node-version:
         required: false
         type: string
-        default: "24"
+        default: "22"
       commands:
         required: true
         type: string
@@ -22,8 +22,6 @@ jobs:
         uses: actions/setup-node@v5
         with:
           node-version: ${{ inputs.node-version }}
-      - name: Node Version
-        run: echo ${{ inputs.node-version }}
 
       - name: Restore yarn & node_modules cache
         uses: actions/cache@v4
