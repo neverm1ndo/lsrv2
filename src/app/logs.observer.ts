@@ -57,7 +57,11 @@ export class LsrvLogsObserver<L extends LogLine = LogLine> {
 
 				await this._save(line);
 			} catch (err) {
-				logger.error(err, "Observer error");
+				if (env.isDevelopment) {
+					console.error(err);
+				}
+
+				logger.error(err, "Parser error");
 			}
 		})();
 	}

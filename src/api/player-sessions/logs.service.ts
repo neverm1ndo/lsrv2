@@ -28,10 +28,6 @@ export class LogsService {
 		return ServiceResponse.success("Search result", lines, StatusCodes.OK);
 	}
 
-	async last(params: SearchQuery) {
-		return this.search(params);
-	}
-
 	private parseOuery() {}
 
 	private buldRootFilterQueryObject(query: SearchQuery): RootFilterQuery {

@@ -36,7 +36,9 @@ export class Observer {
 			.then((stats: Stats) => {
 				this.bytes = stats.size === 0 ? 0 : stats.size;
 			})
-			.catch((err) => logger.error(err, "Observer error"));
+			.catch((err) => {
+				logger.error(err, "Observer error: Cant get last log file");
+			});
 
 		this.fsWatcher.on("change", (path, stats) => this._fsWatcherHandler(path, stats));
 		this.fsWatcher.on("add", (path, stats) => this.fsWatcherNewFileHandler(path, stats));
