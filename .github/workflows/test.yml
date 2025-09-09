@@ -12,6 +12,7 @@ permissions:
 
 jobs:
   vitest:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     name: Run Vitest
     uses: ./.github/workflows/ci-setup.yml
     with:
