@@ -2,9 +2,17 @@ name: Build
 on:
   pull_request:
     types: [opened, synchronize, reopened, edited]
+    branches:
+      - "feature/*"
+      - "bugfix/*"
+  workflow_run:
+    workflows: [Biome, Tests (Vitest)]
+    types:
+      - completed
 
 jobs:
   build:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     name: Build
     uses: ./.github/workflows/ci-setup.yml
     with:
