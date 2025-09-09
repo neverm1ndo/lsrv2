@@ -3,12 +3,13 @@ on:
   pull_request:
     types: [opened, synchronize, reopened, edited]
   workflow_run:
-    workflows: [Biome, Tests (Vitest)]
+    workflows: [Tests (Vitest)]
     types:
       - completed
 
 jobs:
   build:
+    if: ${{ github.event_name == 'pull_request' && github.event.workflow_run.conclusion == 'success'}}
     name: Build
     uses: ./.github/workflows/ci-setup.yml
     with:
