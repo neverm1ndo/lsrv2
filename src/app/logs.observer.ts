@@ -1,7 +1,7 @@
 import type { Stream } from "node:stream";
 
 import type { Document } from "mongoose";
-import { PeggyParserAdapter } from "parser/peg/peggy.parser-adapter";
+import { PeggyParserAdapter } from "parser/logs-parser/peg/peggy.parser-adapter";
 
 import { type LogLine, LogLineModel } from "@lsrv/api/logs";
 import { env } from "@lsrv/common/environment";
