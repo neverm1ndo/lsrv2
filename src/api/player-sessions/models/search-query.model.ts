@@ -6,7 +6,7 @@ export type SearchQuery = z.infer<typeof SearchQuerySchema>;
 
 /** Schema for search query that got from client */
 export const SearchQuerySchema = z.object({
-	query_string: z.string().optional(),
+	q: z.string().optional(),
 	filter: z
 		.string()
 		.transform(async (filter) => filter.split(","))
