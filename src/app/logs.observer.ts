@@ -1,7 +1,8 @@
 import type { Stream } from "node:stream";
 
+import { isEqual } from "lodash-es";
 import type { Document } from "mongoose";
-import { PeggyParserAdapter } from "parser/peg/peggy.parser-adapter";
+import { PeggyParserAdapter } from "parser/logs-parser/peg/peggy.parser-adapter";
 
 import { type LogLine, LogLineModel } from "@lsrv/api/logs";
 import { env } from "@lsrv/common/environment";
@@ -32,7 +33,9 @@ export class LsrvLogsObserver<L extends LogLine = LogLine> {
 	private _isSimilarLine(a: L, b?: L): boolean {
 		if (!a || !b) return false;
 
-		return a.process === b.process && a.message === b.message;
+		return (
+			a.process === b.process && isEqual(a.user, b.user) && Boolean(a.message && b.message) && a.message === b.message
+		);
 	}
 
 	private async _save(line: L): Promise<void> {

@@ -9,7 +9,8 @@
 	"scripts": {
 		"serve": "node --import=tsx --watch src/index.ts",
 		"build": "tsc && tsup",
-		"peggy:build": "peggy -c peggy.config.mjs",
+		"peggy:build-logs": "peggy -c ./src/parser/logs-parser/peg/peggy.config.mjs",
+		"peggy:build-llql": "peggy -c ./src/parser/llql/peg/peggy.config.mjs",
 		"check": "yarn exec biome check --write",
 		"test": "vitest run"
 	},

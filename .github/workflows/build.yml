@@ -10,5 +10,6 @@ jobs:
     with:
       node-version: "24"
       commands: |
-        yarn peggy:build
+        yarn peggy:build-logs
+        yarn peggy:build-llql
         yarn build
