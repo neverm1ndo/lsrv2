@@ -73,6 +73,12 @@ export class LogsService {
 				return { [field]: value };
 			}
 
+			case "NotEqual": {
+				const field = ast.left.value;
+				const value = this.literalToValue(ast.right);
+				return { [field]: { $ne: value } };
+			}
+
 			case "In": {
 				const field = ast.left.value;
 				if (ast.right.type === "Array") {
@@ -92,6 +98,19 @@ export class LogsService {
 				}
 
 				throw new Error(`Unsupported IN right operand: ${ast.right}`);
+			}
+
+			case "NotIn": {
+				const field = ast.left.value;
+				if (ast.right.type === "Array") {
+					return { [field]: { $nin: ast.right.elements.map(this.literalToValue) } };
+				}
+				if (ast.right.type === "Range") {
+					return {
+						[field]: { $not: { $gte: ast.right.start.value, $lte: ast.right.end.value } }
+					};
+				}
+				throw new Error(`Unsupported NOT IN operand: ${ast.right}`);
 			}
 
 			default:

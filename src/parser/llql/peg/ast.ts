@@ -2,7 +2,9 @@ export type QueryASTNode =
 	| LogicalAndNode
 	| LogicalOrNode
 	| EqualNode
+	| NotEqualNode
 	| InNode
+	| NotInNode
 	| ArrayNode
 	| RangeNode
 	| IdentifierNode
@@ -31,8 +33,20 @@ export interface EqualNode {
 	right: LiteralNode;
 }
 
+export interface NotEqualNode {
+	type: "NotEqual";
+	left: IdentifierNode;
+	right: LiteralNode;
+}
+
 export interface InNode {
 	type: "In";
+	left: IdentifierNode;
+	right: ArrayNode | RangeNode;
+}
+
+export interface NotInNode {
+	type: "NotIn";
 	left: IdentifierNode;
 	right: ArrayNode | RangeNode;
 }

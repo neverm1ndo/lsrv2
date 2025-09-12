@@ -54,7 +54,9 @@ AndExpression
 
 Comparison
   = left:Primary _ "==" _ right:Primary { return binaryOp("Equal", left, right); }
+  / left:Primary _ "!=" _ right:Primary { return binaryOp("NotEqual", left, right); }
   / left:Primary _ "in" _ right:Primary { return binaryOp("In", left, right); }
+  / left:Primary _ "not" _ "in" _ right:Primary { return binaryOp("NotIn", left, right); }
   / Primary
 
 
