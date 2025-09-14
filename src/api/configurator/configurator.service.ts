@@ -1,7 +1,8 @@
 import { createReadStream } from "node:fs";
-import { open, stat } from "node:fs/promises";
+import { open, readFile, stat, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 
+import DiffMatchPatch from "diff-match-patch";
 import { StatusCodes } from "http-status-codes";
 import { decodeStream, encodeStream } from "iconv-lite";
 
@@ -10,6 +11,8 @@ import { ServiceResponse } from "@lsrv/common/models";
 
 import { buildTree, type FileTreeOptions } from "./ftree";
 import { isBinary } from "./utils/is-binary";
+
+const dmp = new DiffMatchPatch();
 
 export class ConfiguratorService {
 	async getFileTree(options: FileTreeOptions) {
@@ -58,6 +61,25 @@ export class ConfiguratorService {
 		}
 
 		return stream.pipe(decodeStream("win1251")).pipe(encodeStream("utf8"));
+	}
+
+	async patchFile(patch: { path: string; text: string }) {
+		try {
+			const current = await readFile(patch.path, "utf8");
+
+			const patches = dmp.patch_fromText(patch.text);
+			const [incoming, results] = dmp.patch_apply(patches, current);
+
+			if (results.some((applied) => !applied)) {
+				throw new Error("Patch did not apply cleanly", { cause: StatusCodes.CONFLICT });
+			}
+
+			await writeFile(patch.path, incoming, "utf-8");
+
+			return ServiceResponse.success("File patched", null, StatusCodes.OK);
+		} catch (err) {
+			return ServiceResponse.failure((err as Error).message, err, (err as Error).cause as number);
+		}
 	}
 }
 

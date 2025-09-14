@@ -57,7 +57,16 @@ export class ConfiguratorController {
 		}
 	}
 
-	public async saveFile(req: Request, res: Response) {}
+	public async patchFile(req: Request, res: Response) {
+		const rootDir = req.user?.main_group === Workgroup.DEV ? env.ROOT_PATH : env.CONFIGURATOR_PATH;
+		const fullPath = join(rootDir, req.body.patch.path);
+
+		req.body.patch.path = fullPath;
+
+		const serviceResponse = await configuratorService.patchFile(req.body.patch);
+
+		res.status(serviceResponse.statusCode).send();
+	}
 }
 
 export const configuratorController = new ConfiguratorController();

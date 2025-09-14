@@ -10,4 +10,4 @@ export const configuratorRouter: Router = Router();
 configuratorRouter.get("/ft", configuratorController.getFileThree);
 configuratorRouter.get("/fs", validateRequest(GetFileStatRequestScheme), configuratorController.getFileStat);
 configuratorRouter.get("/file", validateRequest(GetFileStatRequestScheme), configuratorController.getFile);
-configuratorRouter.post("/save", configuratorController.saveFile);
+configuratorRouter.patch("/file", configuratorController.patchFile);
