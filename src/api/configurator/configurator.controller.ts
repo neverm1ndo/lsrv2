@@ -37,15 +37,13 @@ export class ConfiguratorController {
 
 		try {
 			const stats = await stat(fullPath);
-			const headers = new Headers({
-				"Content-Length": stats.size.toString(),
+			const fileStream = await configuratorService.getFileStream(fullPath);
+
+			res.set({
+				"Content-Length": String(stats.size),
 				"Content-Disposition": `inline; filename="${filename}"`,
 				"Content-Type": mime(filename)
 			});
-
-			const fileStream = await configuratorService.getFileStream(fullPath);
-
-			res.setHeaders(headers);
 
 			fileStream.pipe(res);
 		} catch (err) {

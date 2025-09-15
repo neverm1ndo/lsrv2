@@ -8,7 +8,6 @@ export const validateRequest =
 	<P, ResBody, ReqBody, ReqQuery>(schema: ZodType) =>
 	async (req: Request<P, ResBody, ReqBody, ReqQuery>, res: Response, next: NextFunction) => {
 		try {
-			console.log(req.query);
 			await schema.parseAsync({ body: req.body, query: req.query, params: req.params });
 			next();
 		} catch (err) {

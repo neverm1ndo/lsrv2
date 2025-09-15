@@ -42,25 +42,27 @@ export class ConfiguratorService {
 		const rangedBuffer = Buffer.alloc(BUFFER_SIZE);
 		const fileHandle = await open(fullPath, "r");
 
-		const { bytesRead } = await fileHandle.read(rangedBuffer, 0, BUFFER_SIZE, 0);
+		try {
+			const { bytesRead } = await fileHandle.read(rangedBuffer, 0, BUFFER_SIZE, 0);
 
-		fileHandle.close();
+			const sampleBuffer = rangedBuffer.subarray(0, bytesRead);
+			const buffer = sampleBuffer.buffer.slice(
+				sampleBuffer.byteOffset,
+				sampleBuffer.byteOffset + sampleBuffer.byteLength
+			);
 
-		const sampleBuffer = rangedBuffer.subarray(0, bytesRead);
-		const buffer = sampleBuffer.buffer.slice(
-			sampleBuffer.byteOffset,
-			sampleBuffer.byteOffset + sampleBuffer.byteLength
-		);
+			const isBinaryFile = isBinary(buffer);
 
-		const isBinaryFile = isBinary(buffer);
+			const stream = createReadStream(fullPath);
 
-		const stream = createReadStream(fullPath);
+			if (isBinaryFile) {
+				return stream;
+			}
 
-		if (isBinaryFile) {
-			return stream;
+			return stream.pipe(decodeStream("win1251")).pipe(encodeStream("utf8"));
+		} finally {
+			await fileHandle.close();
 		}
-
-		return stream.pipe(decodeStream("win1251")).pipe(encodeStream("utf8"));
 	}
 
 	async patchFile(patch: { path: string; text: string }) {
