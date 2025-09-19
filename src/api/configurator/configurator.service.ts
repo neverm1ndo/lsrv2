@@ -1,6 +1,5 @@
 import { createReadStream } from "node:fs";
 import { open, readFile, stat, writeFile } from "node:fs/promises";
-import { join } from "node:path";
 
 import DiffMatchPatch from "diff-match-patch";
 import { StatusCodes } from "http-status-codes";
@@ -19,11 +18,9 @@ export class ConfiguratorService {
 		return ServiceResponse.success("File three", await buildTree(options), StatusCodes.OK);
 	}
 
-	async getFileStat(root: string, path: string) {
-		const fullPath = join(root, path);
-
+	async getFileStat(path: string) {
 		try {
-			const stats = await stat(fullPath);
+			const stats = await stat(path);
 			const fileStat = {
 				size: stats.size,
 				mtime: stats.mtime,
@@ -36,11 +33,11 @@ export class ConfiguratorService {
 		}
 	}
 
-	async getFileStream(fullPath: string) {
+	async getFileStream(path: string) {
 		const BUFFER_SIZE = 512;
 
 		const rangedBuffer = Buffer.alloc(BUFFER_SIZE);
-		const fileHandle = await open(fullPath, "r");
+		const fileHandle = await open(path, "r");
 
 		try {
 			const { bytesRead } = await fileHandle.read(rangedBuffer, 0, BUFFER_SIZE, 0);
@@ -53,7 +50,7 @@ export class ConfiguratorService {
 
 			const isBinaryFile = isBinary(buffer);
 
-			const stream = createReadStream(fullPath);
+			const stream = createReadStream(path);
 
 			if (isBinaryFile) {
 				return stream;

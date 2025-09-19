@@ -4,19 +4,16 @@ import { basename, join } from "node:path";
 import type { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 
-import { env } from "@lsrv/common/environment";
 import { mime } from "@lsrv/common/mime";
 import type { Dummy } from "@lsrv/common/models";
 
-import { Workgroup } from "../user";
 import { configuratorService } from "./configurator.service";
 import type { FileStatQuery } from "./models/file-stat";
 
 export class ConfiguratorController {
-	public async getFileThree(req: Request, res: Response) {
-		const rootDir = req.user?.main_group === Workgroup.DEV ? env.ROOT_PATH : env.CONFIGURATOR_PATH;
+	public async getFileThree(req: Request<unknown, unknown, unknown, FileStatQuery>, res: Response) {
 		const serviceResponse = await configuratorService.getFileTree({
-			rootDir,
+			rootDir: req.query.path,
 			ignore: ["omp-server", "samp03srv", "samp-npc"]
 		});
 
@@ -24,20 +21,17 @@ export class ConfiguratorController {
 	}
 
 	public async getFileStat(req: Request<Dummy, Dummy, Dummy, FileStatQuery>, res: Response) {
-		const rootDir = req.user?.main_group === Workgroup.DEV ? env.ROOT_PATH : env.CONFIGURATOR_PATH;
-		const serviceResponse = await configuratorService.getFileStat(rootDir, req.query.path);
+		const serviceResponse = await configuratorService.getFileStat(req.query.path);
 
 		return res.status(serviceResponse.statusCode).send(serviceResponse.responseObject);
 	}
 
 	public async getFile(req: Request<Dummy, Dummy, Dummy, FileStatQuery>, res: Response) {
-		const rootDir = req.user?.main_group === Workgroup.DEV ? env.ROOT_PATH : env.CONFIGURATOR_PATH;
 		const filename = basename(req.query.path);
-		const fullPath = join(rootDir, req.query.path);
 
 		try {
-			const stats = await stat(fullPath);
-			const fileStream = await configuratorService.getFileStream(fullPath);
+			const stats = await stat(req.query.path);
+			const fileStream = await configuratorService.getFileStream(req.query.path);
 
 			res.set({
 				"Content-Length": String(stats.size),
@@ -55,13 +49,12 @@ export class ConfiguratorController {
 		}
 	}
 
-	public async patchFile(req: Request, res: Response) {
-		const rootDir = req.user?.main_group === Workgroup.DEV ? env.ROOT_PATH : env.CONFIGURATOR_PATH;
-		const fullPath = join(rootDir, req.body.patch.path);
+	public async patchFile(req: Request<unknown, unknown, { text: string; path: string }, FileStatQuery>, res: Response) {
+		const fullPath = join(req.query.path, req.body.path);
 
-		req.body.patch.path = fullPath;
+		req.body.path = fullPath;
 
-		const serviceResponse = await configuratorService.patchFile(req.body.patch);
+		const serviceResponse = await configuratorService.patchFile(req.body);
 
 		res.status(serviceResponse.statusCode).send();
 	}

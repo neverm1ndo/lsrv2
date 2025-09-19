@@ -1,11 +1,11 @@
 import z from "zod";
 
-export type FileStatQuery = z.infer<typeof FileStatRequestScheme>;
+export type FileStatQuery = z.infer<typeof FileRequestScheme>;
 
-export const FileStatRequestScheme = z.object({
+export const FileRequestScheme = z.object({
 	path: z.string()
 });
 
-export const GetFileStatRequestScheme = z.object({
-	query: FileStatRequestScheme
+export const GetFileRequestScheme = z.object({
+	query: FileRequestScheme
 });

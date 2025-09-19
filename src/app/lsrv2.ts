@@ -8,6 +8,7 @@ import passport from "passport";
 import type { Server as IoServer } from "socket.io";
 
 import { BaseRouter } from "@lsrv/api";
+import { env } from "@lsrv/common/environment";
 import { CORS_CONFIG, HTTPS_CONFIG } from "@lsrv/core/http";
 import { errorHandler, rateLimiter, requestLogger } from "@lsrv/core/middlewares";
 import { lsrv2Session } from "@lsrv/core/session";
@@ -36,7 +37,10 @@ lsrv2.use(lsrv2Session);
 lsrv2.use(passport.initialize());
 lsrv2.use(passport.session());
 lsrv2.use(helmet());
-lsrv2.use(rateLimiter);
+
+if (env.isProduction) {
+	lsrv2.use(rateLimiter);
+}
 
 // Logging
 lsrv2.use(requestLogger);
