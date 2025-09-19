@@ -18,13 +18,7 @@ export class LogsService {
 	async search(query: SearchQuery) {
 		const rootFilterQuery = this.buldRootFilterQueryObject(query);
 
-		const lines = await LogLineModel.find(rootFilterQuery)
-			.limit(query.limit)
-			.sort({ unix: 1 })
-			// .where("process")
-			// .nin(query.filter)
-			.lean()
-			.exec();
+		const lines = await LogLineModel.find(rootFilterQuery).limit(query.limit).sort({ unix: 1 }).lean().exec();
 
 		return ServiceResponse.success("Search result", lines, StatusCodes.OK);
 	}

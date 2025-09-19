@@ -5,7 +5,7 @@ import type { ZodError, ZodType } from "zod";
 import { ServiceResponse } from "../models/service-response";
 
 export const validateRequest =
-	<P, ResBody, ReqBody, ReqQuery = NonNullable<unknown>>(schema: ZodType) =>
+	<P, ResBody, ReqBody, ReqQuery>(schema: ZodType) =>
 	async (req: Request<P, ResBody, ReqBody, ReqQuery>, res: Response, next: NextFunction) => {
 		try {
 			await schema.parseAsync({ body: req.body, query: req.query, params: req.params });

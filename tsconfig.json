@@ -17,6 +17,7 @@
 			"@lsrv/common/environment": ["common/env/index.ts"],
 			"@lsrv/common/validation": ["common/validation/index.ts"],
 			"@lsrv/common/models": ["common/models/index.ts"],
+			"@lsrv/common/mime": ["common/mime/mime.ts"],
 			"@lsrv/models/response": ["models/response/index.ts"],
 			"@lsrv/api": ["api/index.ts"],
 			"@lsrv/api/user": ["api/user/index.ts"],
