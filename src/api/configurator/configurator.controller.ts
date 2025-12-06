@@ -14,7 +14,7 @@ export class ConfiguratorController {
 	public async getFileThree(req: Request<unknown, unknown, unknown, FileStatQuery>, res: Response) {
 		const serviceResponse = await configuratorService.getFileTree({
 			rootDir: req.query.path,
-			ignore: ["omp-server", "samp03srv", "samp-npc"]
+			ignore: ["omp-server", "samp03srv", "cr03srv", "announcr", "samp-npc"]
 		});
 
 		return res.status(serviceResponse.statusCode).send(serviceResponse.responseObject);
