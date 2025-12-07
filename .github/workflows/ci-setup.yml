@@ -41,4 +41,6 @@ jobs:
         run: |
           set -e
           echo "Running reusable commands..."
+          yarn peggy:build-logs
+          yarn peggy:build-llql
           bash -lc "${{ inputs.commands }}"
