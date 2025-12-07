@@ -125,7 +125,7 @@ describe("Logs parser", () => {
     it("should parse auth error", async () => {
         const AUTH_ERR = `1701907620 20241207T000700 <auth/error> Nick (0) double account`;
         const parsed = adapter.parse(Buffer.from(AUTH_ERR));
-
+        
         expect(parsed).toEqual({
             unix: 1701907620,
             date: '20241207T000700',
@@ -133,7 +133,28 @@ describe("Logs parser", () => {
             user: COMMON_USER_EXPECTATION,
             error: { reason: "double" }
         });
-     });
+    });
+    
+    it("should parse pause end", async () => {
+        const line = `1701914340 20241207T015900 <pause/end> Nick (0) '1 час, 2 минуты и 5 секунд'`;
+        const parsed = adapter.parse(Buffer.from(line));
+        
+        expect(parsed).toMatchObject({
+            user: COMMON_USER_EXPECTATION,
+            message: '1 час, 2 минуты и 5 секунд'
+        });
+    });
+
+    it("should parse number tuple", async () => {
+        const line = `1701913380 20241207T014300 <dev/click_map> Nick (0) 123.000 -10.000 999.999`;
+        const parsed = adapter.parse(Buffer.from(line));
+        
+        expect(parsed).toMatchObject({
+            user: COMMON_USER_EXPECTATION,
+            numbers: [123, -10, 999.999]
+        });
+    });
+    
 
      describe("bans", () => {         
          it("should parse CN ban", async () => {
@@ -171,6 +192,28 @@ describe("Logs parser", () => {
                         nickname: 'Name',
                         schedule: 123456
                     }
+                }
+            });
+         });
+
+         it("should parse autoremove timer", async () => {
+            const line = `1701913440 20241207T014400 <disconnect/ban> Nick (0) админ Nick 'причина' {Russia, cc:RU, ip:1.1.1.1, as:12389, ss:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA, org:ORG, cli:0.3.7-R5}`;
+            const parsed = adapter.parse(Buffer.from(line));
+    
+            expect(parsed).toMatchObject({
+                user: COMMON_USER_EXPECTATION,
+                ban: {
+                    by: 'Nick',
+                    reason: 'причина'
+                },
+                serials: {
+                    cc: 'RU',
+                    ip: '1.1.1.1',
+                    as: 12389,
+                    ss: 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA',
+                    org: 'ORG',
+                    cli: '0.3.7-R5',
+                    country: 'Russia'
                 }
             });
          });
@@ -228,6 +271,64 @@ describe("Logs parser", () => {
                 chat_mute: {
                     duration: 10,
                     reason: 'нехороший человек'
+                }
+            });
+        });
+
+        it("should parse mute by admin", async () => {
+            const line = `1701909900 20241207T004500 <chat/mute/hand> Nick (0) 10 мин, Админ 'причина'`;
+            const parsed = adapter.parse(Buffer.from(line));
+
+            expect(parsed).toMatchObject({
+                user: COMMON_USER_EXPECTATION,
+                chat_mute: {
+                    duration: 10,
+                    by: 'Админ',
+                    reason: 'причина'
+                }
+            });
+        });
+
+        it("should parse unmute by admin", async () => {
+            const line = `1701910260 20241207T005100 <chat/unmute/hand> Nick (0) админ Administrator`;
+            const parsed = adapter.parse(Buffer.from(line));
+
+            expect(parsed).toMatchObject({
+                user: COMMON_USER_EXPECTATION,
+                chat_unmute: {
+                    by: 'Administrator',
+                }
+            });
+        });
+
+    });
+
+    describe("combat events", () => {
+        it("should parse death event", async () => {
+            const line = `1701912900 20241207T013500 <death/killed> Nick (0) Player2 из 'Weapon'`;
+            const parsed = adapter.parse(Buffer.from(line));
+
+            expect(parsed).toMatchObject({
+                user: COMMON_USER_EXPECTATION,
+                subject: {
+                    nickname: "Player2"
+                },
+                death: 'Weapon'
+            });
+        });
+    });
+
+    describe("mute evasion", () => {
+        it("should parse mute evasion", async () => {
+            const line = `1701914160 20241207T015600 <mute/evasion/add/auto> freemode_system Nick`;
+            const parsed = adapter.parse(Buffer.from(line));
+
+            expect(parsed).toMatchObject({
+                user: {
+                    nickname: 'freemode_system'
+                },
+                subject: {
+                    nickname: 'Nick'
                 }
             });
         });

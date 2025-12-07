@@ -25,7 +25,9 @@ logline
         process:process
         user:user
         error:auth_error_reason?
+        ban:ban?
         chat_mute:chat_mute?
+        chat_unmute:chat_unmute?
         time:humanized_time?
         numbers:numbers?
         editor:editor?
@@ -56,7 +58,9 @@ logline
                     editor,
                     activity,
                     chat_block,
-                    chat_mute
+                    chat_mute,
+                    chat_unmute,
+                    ban
 				};
  
                 return deleteNullValues(line);
@@ -316,7 +320,11 @@ chat_block_type
     / "close"
 
 chat_mute
-    = duration:number ws "мин" ws reason:message { return { duration, reason }};
+    = duration:number ws "мин" ws by:("," ws @nickname ws)? reason:message { return { duration, reason, by }};
+chat_unmute
+    = "админ" ws by:nickname { return { by }}
+ban
+    = unmute:chat_unmute ws reason:message { return { ...unmute, reason }}
 
 activity_type
     = "baron"
