@@ -8,7 +8,13 @@ import { GetSessionRequesSchema } from "./models/session-request.model";
 
 export const authRouter: Router = express.Router();
 
-authRouter.get("/", passport.authenticate("jwt", { session: false }), authController.auth);
+authRouter.get("/session", passport.authenticate("jwt"), authController.auth);
 authRouter.get("/logout", passport.authenticate("jwt"), authController.logout);
 
-authRouter.post("/session", json(), validateRequest(GetSessionRequesSchema), authController.session);
+authRouter.post(
+	"/login",
+	json(),
+	validateRequest(GetSessionRequesSchema),
+	passport.authenticate("local", { session: true }),
+	authController.session
+);

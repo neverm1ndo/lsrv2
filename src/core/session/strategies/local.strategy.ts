@@ -12,17 +12,14 @@ import { DB_POOL } from "@lsrv/core/db";
 const PWD_OFFSET = 32;
 
 const checkPassword = (pass?: string, hash?: string): boolean => {
-	if (!pass || !hash) return false;
+	if (!pass || typeof pass !== "string") return false;
+	if (!hash || typeof hash !== "string" || hash.length <= PWD_OFFSET) return false;
 
 	const salt = hash.slice(0, hash.length - PWD_OFFSET);
-	const realPassword = hash.slice(hash.length - PWD_OFFSET, hash.length);
+	const realPassword = hash.slice(hash.length - PWD_OFFSET);
 	const password = md5(salt + pass);
 
-	if (password === realPassword) {
-		return true;
-	}
-
-	return false;
+	return password === realPassword;
 };
 
 const localStrategyOptions: LocalStrategyOptions = {
@@ -39,6 +36,9 @@ export const localStrategy: LocalStrategy = new LocalStrategy(
 	) => {
 		void (async () => {
 			try {
+				if (!email || !password) {
+					return void done(null, false, { message: "Missing credentials" });
+				}
 				const [userQueryResult] = await DB_POOL.query(USER_QUERY_BY_EMAIL, [email]);
 
 				const userWithGroups = z.array(UserSchema).parse(userQueryResult);
@@ -48,9 +48,9 @@ export const localStrategy: LocalStrategy = new LocalStrategy(
 				}
 
 				const [user] = userWithGroups;
-				const { id, main_group, username, password: hash, permissions, avatar } = user;
+				const { id, main_group, username, password: storedHash, permissions, avatar } = user;
 
-				if (!checkPassword(password, hash)) {
+				if (!checkPassword(password, storedHash)) {
 					return void done(null, false, { message: "Wrong password" });
 				}
 
@@ -70,6 +70,7 @@ export const localStrategy: LocalStrategy = new LocalStrategy(
 					{ message: "Success" }
 				);
 			} catch (error) {
+				console.log(error);
 				const err = {
 					message: ""
 				};

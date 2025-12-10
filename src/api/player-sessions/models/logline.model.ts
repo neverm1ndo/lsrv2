@@ -6,6 +6,11 @@ export type LogPlayer = z.infer<typeof LogPlayerSchema>;
 export type LogSerialNumbers = z.infer<typeof LogSerialsSchema>;
 export type LogSubject = z.infer<typeof LogSubjectSchema>;
 export type LogEditorAction = z.infer<typeof EditorActionSchema>;
+export type Activity = z.infer<typeof ActivitySchema>;
+export type ChatMute = z.infer<typeof ChatMuteSchema>;
+export type ChatUnmute = z.infer<typeof ChatUnmuteSchema>;
+export type ChatBlock = z.infer<typeof ChatBlockSchema>;
+export type Ban = z.infer<typeof BanSchema>;
 export type LogLine = z.infer<typeof LogLineSchema>;
 
 export const LogTimeSchema = z.object({
@@ -47,6 +52,28 @@ export const EditorActionSchema = z
 	})
 	.catchall(z.union([z.string(), z.number()]));
 
+export const ActivitySchema = z.object({
+	type: z.enum(["baron", "bjump", "climb", "derby"]),
+	id: z.number()
+});
+
+export const ChatMuteSchema = z.object({
+	duration: z.number(),
+	reason: z.string(),
+	by: z.string().optional()
+});
+
+export const ChatUnmuteSchema = z.object({
+	by: z.string()
+});
+
+export const ChatBlockSchema = z.enum(["admin", "group", "team", "close"]);
+
+export const BanSchema = z.object({
+	...ChatUnmuteSchema.shape,
+	reason: z.string()
+});
+
 export const LogLineSchema = z.object({
 	unix: z.number(),
 	date: z.string(),
@@ -58,7 +85,12 @@ export const LogLineSchema = z.object({
 	death: z.string().optional(),
 	message: z.string().optional(),
 	serials: LogSerialsSchema.partial().optional(),
-	editor: EditorActionSchema.optional()
+	editor: EditorActionSchema.optional(),
+	activity: ActivitySchema.optional(),
+	chat_mute: ChatMuteSchema.optional(),
+	chat_unmute: ChatUnmuteSchema.optional(),
+	chat_block: ChatBlockSchema.optional(),
+	ban: BanSchema.optional()
 });
 
 const MLogTimeSchema = new Schema(
@@ -120,6 +152,42 @@ const MEditorActionSchema = new Schema(
 	{ _id: false, strict: false } // strict:false позволяет сохранять дополнительные ключи
 );
 
+const MActivitySchema = new Schema(
+	{
+		type: { type: String, enum: ["baron", "bjump", "climb", "derby"], required: true },
+		id: { type: Number, required: true }
+	},
+	{ _id: false }
+);
+
+const MChatMuteSchema = new Schema(
+	{
+		duration: { type: Number, required: true },
+		reason: { type: String, required: true },
+		by: { type: String }
+	},
+	{ _id: false }
+);
+
+const MChatUnmuteSchema = new Schema(
+	{
+		by: { type: String, required: true }
+	},
+	{ _id: false }
+);
+
+const MChatBlockSchema = {
+	type: { type: String, enum: ["admin", "group", "team", "close"], required: true }
+};
+
+const MBanSchema = new Schema(
+	{
+		by: { type: String, required: true },
+		reason: { type: String, required: true }
+	},
+	{ _id: false }
+);
+
 const MLogLineSchema = new Schema<LogLine & { multi?: number }>(
 	{
 		unix: { type: Number, required: true },
@@ -133,6 +201,11 @@ const MLogLineSchema = new Schema<LogLine & { multi?: number }>(
 		message: { type: String },
 		serials: { type: MLogSerialsSchema },
 		editor: { type: MEditorActionSchema },
+		activity: { type: MActivitySchema },
+		chat_unmute: { type: MChatUnmuteSchema },
+		chat_mute: { type: MChatMuteSchema },
+		chat_block: MChatBlockSchema,
+		ban: { type: MBanSchema },
 		multi: { type: Number, default: undefined }
 	},
 	{
