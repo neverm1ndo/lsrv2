@@ -24,12 +24,19 @@ logline
         date:datetime ws
         process:process
         user:user
+        error:auth_error_reason?
+        ban:ban?
+        chat_mute:chat_mute?
+        chat_unmute:chat_unmute?
         time:humanized_time?
         numbers:numbers?
         editor:editor?
+        activity:activity?
+        chat_block: chat_block_type?
         subject:(
-            admin 
-        	/ user_with_role 
+            known_user 
+            / user_with_timer
+        	/ user_with_role
             / user
         )?
         death:death?
@@ -41,13 +48,19 @@ logline
                     date,
                     process,
                     user,
+                    error,
                     message,
                     time,
                     numbers,
                     subject,
                     death,
                     serials,
-                    editor
+                    editor,
+                    activity,
+                    chat_block,
+                    chat_mute,
+                    chat_unmute,
+                    ban
 				};
  
                 return deleteNullValues(line);
@@ -127,8 +140,11 @@ ws "whitespace" = [ \t\n\r]*
 space "space"
 	= " "
 
+process_key "process key"
+    = $[a-zA-Zа-яА-Я_]i+
+
 process "process" 
-	= begin_process head:word tail:(process_separator word)* end_process { 
+	= begin_process head:process_key tail:(process_separator process_key)* end_process { 
     	return [head, ...tail.flat()].join('');
 	}
 
@@ -143,8 +159,8 @@ user "user"
     	return id === null ? { nickname } : { nickname, id }; 
     }
 
-admin
-	= "id:" id:number ws name:message { return { admin: { id, name }}}
+known_user "known_user"
+	= "id:" id:number ws name:message { return { user: { id, name }}}
 
 user_with_role
 	= role:(
@@ -155,6 +171,9 @@ user_with_role
     ws user:user {
     	return { role, ...user };
     }
+    
+user_with_timer
+	= nickname:nickname ws schedule:number { return { timer: { nickname, schedule }}}
 
 // ----- Numbers -----
 
@@ -288,8 +307,33 @@ object_value
 
 // ----- Core GameServer Rules -----
 
+auth_error_reason
+    = reason:("double" / "inactive") ws "account" { return { reason }}
+
 death "death"
 	= ws "из" ws @message
+
+chat_block_type
+    = "admin"
+    / "group"
+    / "team"
+    / "close"
+
+chat_mute
+    = duration:number ws "мин" ws by:("," ws @nickname ws)? reason:message { return { duration, reason, by }};
+chat_unmute
+    = "админ" ws by:nickname { return { by }}
+ban
+    = unmute:chat_unmute ws reason:message { return { ...unmute, reason }}
+
+activity_type
+    = "baron"
+    / "bjump"
+    / "climb"
+    / "derby"
+
+activity
+	= type:activity_type "_id" name_separator id:number { return { type, id }}
     
 editor "editor"
 	= "editor_id" name_separator editor_id:number value_separator ws
