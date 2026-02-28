@@ -1,9 +1,9 @@
-import type { Request, RequestHandler, Response } from "express";
-import { StatusCodes } from "http-status-codes";
+import type { Request, RequestHandler, Response } from 'express';
+import { StatusCodes } from 'http-status-codes';
 
-import { logger } from "@lsrv/logger";
+import { logger } from '@lsrv/logger';
 
-import { authService } from "./auth.service";
+import { authService } from './auth.service';
 
 class AuthController {
 	public session: RequestHandler = async (req: Request, res: Response) => {
@@ -19,11 +19,11 @@ class AuthController {
 	public logout: RequestHandler = async (req: Request, res: Response) => {
 		req.session.destroy((err) => {
 			if (err) {
-				return logger.error(err, "Session destruction error");
+				return logger.error(err, 'Session destruction error');
 			}
 		});
 
-		res.status(StatusCodes.OK).send("bye");
+		res.status(StatusCodes.OK).send('bye');
 	};
 }
 

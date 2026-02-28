@@ -1,5 +1,5 @@
-import { StatusCodes } from "http-status-codes";
-import { z } from "zod";
+import { StatusCodes } from 'http-status-codes';
+import { z } from 'zod';
 
 export class ServiceResponse<T = null> {
 	readonly success: boolean;

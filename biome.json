@@ -1,6 +1,10 @@
 {
 	"$schema": "https://biomejs.dev/schemas/2.2.0/schema.json",
-	"vcs": { "enabled": false, "clientKind": "git", "useIgnoreFile": false },
+	"vcs": {
+		"enabled": true,
+		"clientKind": "git",
+		"useIgnoreFile": true
+	},
 	"files": {
 		"ignoreUnknown": false,
 		"includes": [
@@ -29,7 +33,7 @@
 						"groups": [
 							":NODE:",
 							":BLANK_LINE:",
-							[":PACKAGE:", ":PACKAGE_WITH_PROTOCOL:", "!@lsrv/**"],
+							["@nestjs/**", ":PACKAGE:", ":PACKAGE_WITH_PROTOCOL:", "!@lsrv/**"],
 							":BLANK_LINE:",
 							["@lsrv/**"],
 							":BLANK_LINE:",
@@ -48,11 +52,20 @@
 				"noUnusedImports": {
 					"level": "error",
 					"fix": "safe"
-				}
+				},
+				"noUnusedVariables": "warn"
 			},
 			"style": {
 				"noMagicNumbers": "error",
-				"noCommonJs": "error"
+				"noCommonJs": "error",
+				"useNamingConvention": {
+					"level": "error",
+					"options": { "strictCase": false }
+				}
+			},
+			"suspicious": {
+				"noEmptyInterface": "off",
+				"noExplicitAny": "warn"
 			}
 		}
 	},
@@ -62,7 +75,11 @@
 			"semicolons": "always",
 			"lineEnding": "lf",
 			"operatorLinebreak": "before",
-			"trailingCommas": "none"
+			"trailingCommas": "none",
+			"quoteStyle": "single"
+		},
+		"parser": {
+			"unsafeParameterDecoratorsEnabled": true
 		}
 	}
 }

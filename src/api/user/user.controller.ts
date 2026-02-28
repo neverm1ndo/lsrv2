@@ -1,6 +1,6 @@
-import type { Request, RequestHandler, Response } from "express";
+import type { Request, RequestHandler, Response } from 'express';
 
-import { userService } from "./user.service";
+import { userService } from './user.service';
 
 class UserController {
 	public getUser: RequestHandler = async (req: Request, res: Response) => {

@@ -1,9 +1,9 @@
-import pino from "pino";
+import pino from 'pino';
 
 export const logger = pino({
-	name: "server start",
+	name: 'server start',
 	transport: {
-		target: "pino-pretty",
+		target: 'pino-pretty',
 		options: {
 			colorize: true
 		}

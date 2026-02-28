@@ -1,27 +1,27 @@
-import { createServer, type Server } from "node:https";
-import { join } from "node:path";
+import { createServer, type Server } from 'node:https';
+import { join } from 'node:path';
 
-import cors from "cors";
-import express, { type Express } from "express";
-import helmet from "helmet";
-import passport from "passport";
-import type { Server as IoServer } from "socket.io";
+import cors from 'cors';
+import express, { type Express } from 'express';
+import helmet from 'helmet';
+import passport from 'passport';
+import type { Server as IoServer } from 'socket.io';
 
-import { BaseRouter } from "@lsrv/api";
-import { env } from "@lsrv/common/environment";
-import { CORS_CONFIG, HTTPS_CONFIG } from "@lsrv/core/http";
-import { errorHandler, rateLimiter, requestLogger } from "@lsrv/core/middlewares";
-import { lsrv2Session } from "@lsrv/core/session";
-import { bootstrapIo } from "@lsrv/core/socket";
+import { BaseRouter } from '@lsrv/api';
+import { env } from '@lsrv/common/environment';
+import { CORS_CONFIG, HTTPS_CONFIG } from '@lsrv/core/http';
+import { errorHandler, rateLimiter, requestLogger } from '@lsrv/core/middlewares';
+import { lsrv2Session } from '@lsrv/core/session';
+import { bootstrapIo } from '@lsrv/core/socket';
 
-import { LsrvLogsObserver } from "./logs.observer";
+import { LsrvLogsObserver } from './logs.observer';
 
 // Application
 const lsrv2: Express = express();
 const server: Server = createServer(HTTPS_CONFIG, lsrv2);
 const io: IoServer = bootstrapIo(server, { cors: CORS_CONFIG }, [
 	lsrv2Session,
-	passport.authenticate("jwt"),
+	passport.authenticate('jwt'),
 	passport.initialize(),
 	passport.session()
 ]);
@@ -46,8 +46,8 @@ if (env.isProduction) {
 lsrv2.use(requestLogger);
 
 // API Routes
-lsrv2.use("/.well-known/acme-challenge", express.static(join(__dirname, "../static/.well-known/acme-challenge")));
-lsrv2.use("/v2", BaseRouter);
+lsrv2.use('/.well-known/acme-challenge', express.static(join(__dirname, '../static/.well-known/acme-challenge')));
+lsrv2.use('/v2', BaseRouter);
 
 // Error handlers
 lsrv2.use(errorHandler());

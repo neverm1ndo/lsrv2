@@ -1,5 +1,5 @@
-import { model, Schema } from "mongoose";
-import z from "zod";
+import { model, Schema } from 'mongoose';
+import z from 'zod';
 
 export type LogTimeObject = z.infer<typeof LogTimeSchema>;
 export type LogPlayer = z.infer<typeof LogPlayerSchema>;
@@ -42,18 +42,18 @@ export const LogSubjectSchema = LogPlayerSchema.extend({
 			name: z.string()
 		})
 		.optional(),
-	role: z.enum(["Администратор", "Игрок", "Разработчик"]).optional()
+	role: z.enum(['Администратор', 'Игрок', 'Разработчик']).optional()
 });
 
 export const EditorActionSchema = z
 	.object({
 		editor_id: z.number(),
-		group: z.enum(["owner", "guest"])
+		group: z.enum(['owner', 'guest'])
 	})
 	.catchall(z.union([z.string(), z.number()]));
 
 export const ActivitySchema = z.object({
-	type: z.enum(["baron", "bjump", "climb", "derby"]),
+	type: z.enum(['baron', 'bjump', 'climb', 'derby']),
 	id: z.number()
 });
 
@@ -67,7 +67,7 @@ export const ChatUnmuteSchema = z.object({
 	by: z.string()
 });
 
-export const ChatBlockSchema = z.enum(["admin", "group", "team", "close"]);
+export const ChatBlockSchema = z.enum(['admin', 'group', 'team', 'close']);
 
 export const BanSchema = z.object({
 	...ChatUnmuteSchema.shape,
@@ -137,7 +137,7 @@ const MLogSubjectSchema = new Schema(
 		},
 		role: {
 			type: String,
-			enum: ["Администратор", "Игрок", "Разработчик"],
+			enum: ['Администратор', 'Игрок', 'Разработчик'],
 			required: false
 		}
 	},
@@ -147,14 +147,14 @@ const MLogSubjectSchema = new Schema(
 const MEditorActionSchema = new Schema(
 	{
 		editor_id: { type: Number, required: true },
-		group: { type: String, enum: ["owner", "guest"], required: true }
+		group: { type: String, enum: ['owner', 'guest'], required: true }
 	},
 	{ _id: false, strict: false } // strict:false позволяет сохранять дополнительные ключи
 );
 
 const MActivitySchema = new Schema(
 	{
-		type: { type: String, enum: ["baron", "bjump", "climb", "derby"], required: true },
+		type: { type: String, enum: ['baron', 'bjump', 'climb', 'derby'], required: true },
 		id: { type: Number, required: true }
 	},
 	{ _id: false }
@@ -177,7 +177,7 @@ const MChatUnmuteSchema = new Schema(
 );
 
 const MChatBlockSchema = {
-	type: { type: String, enum: ["admin", "group", "team", "close"], required: true }
+	type: { type: String, enum: ['admin', 'group', 'team', 'close'], required: true }
 };
 
 const MBanSchema = new Schema(
@@ -213,4 +213,4 @@ const MLogLineSchema = new Schema<LogLine & { multi?: number }>(
 	}
 );
 
-export const LogLineModel = model<LogLine & { multi?: number }>("LogLine", MLogLineSchema);
+export const LogLineModel = model<LogLine & { multi?: number }>('LogLine', MLogLineSchema);

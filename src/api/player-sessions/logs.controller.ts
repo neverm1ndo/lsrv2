@@ -1,7 +1,7 @@
-import type { Request, Response } from "express";
+import type { Request, Response } from 'express';
 
-import { logsService } from "./logs.service";
-import type { SearchQuery } from "./models/search-query.model";
+import { logsService } from './logs.service';
+import type { SearchQuery } from './models/search-query.model';
 
 type Dummy = NonNullable<unknown>;
 

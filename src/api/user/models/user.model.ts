@@ -1,6 +1,6 @@
-import { z } from "zod";
+import { z } from 'zod';
 
-import { Validation } from "@lsrv/common/validation";
+import { Validation } from '@lsrv/common/validation';
 
 export type User = z.infer<typeof UserSchema>;
 export type UserWithPermissions = z.infer<typeof UserWithPermissionsSchema>;
@@ -14,7 +14,7 @@ export const UserSchema = z.object({
 	main_group: z.number(),
 	permissions: z
 		.string()
-		.transform((value) => value.split(",").map(Number))
+		.transform((value) => value.split(',').map(Number))
 		.pipe(z.number().array())
 });
 

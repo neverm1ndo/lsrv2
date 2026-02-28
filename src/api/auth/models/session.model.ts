@@ -1,6 +1,6 @@
-import { z } from "zod";
+import { z } from 'zod';
 
-import { UserWithPermissionsSchema } from "@lsrv/api/user";
+import { UserWithPermissionsSchema } from '@lsrv/api/user';
 
 export type UserSession = z.infer<typeof UserSessionSchema>;
 

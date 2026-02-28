@@ -1,10 +1,10 @@
-import { extname } from "node:path";
+import { extname } from 'node:path';
 
-import { charset, lookup } from "mime-types";
+import { charset, lookup } from 'mime-types';
 
-import { modmimes } from "./custom.mimes";
+import { modmimes } from './custom.mimes';
 
-const NO_MIME = "*/*";
+const NO_MIME = '*/*';
 
 export const mime = (path: string): string => {
 	const extension = extname(path);

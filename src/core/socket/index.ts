@@ -1,8 +1,8 @@
-import type { IncomingMessage } from "node:http";
-import type { Server as HttpsServer } from "node:https";
+import type { IncomingMessage } from 'node:http';
+import type { Server as HttpsServer } from 'node:https';
 
-import type { Handler } from "express";
-import { type ExtendedError, Server as IoServer, type ServerOptions as IoServerOptions, type Socket } from "socket.io";
+import type { Handler } from 'express';
+import { type ExtendedError, Server as IoServer, type ServerOptions as IoServerOptions, type Socket } from 'socket.io';
 
 export interface IIncomingMessage<User> extends IncomingMessage {
 	user?: User;
@@ -30,7 +30,7 @@ export const bootstrapIo = <User = unknown>(
 	});
 
 	io.use((socket: SocketWithUser<User>, next: (err?: ExtendedError) => void) => {
-		socket.request.user ? next() : next(new Error("Unauthorized"));
+		socket.request.user ? next() : next(new Error('Unauthorized'));
 	});
 
 	return io;

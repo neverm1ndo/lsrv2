@@ -1,13 +1,13 @@
-import { StatusCodes } from "http-status-codes";
-import type { FilterQuery } from "mongoose";
+import { StatusCodes } from 'http-status-codes';
+import type { FilterQuery } from 'mongoose';
 
-import { ServiceResponse } from "@lsrv/common/models";
-import { type LiteralNode, LLQLParserAdapter, type QueryASTNode } from "@lsrv/parser";
+import { ServiceResponse } from '@lsrv/common/models';
+import { type LiteralNode, LLQLParserAdapter, type QueryASTNode } from '@lsrv/parser';
 
-import { type LogLine, LogLineModel } from "./models/logline.model";
-import type { SearchQuery } from "./models/search-query.model";
+import { type LogLine, LogLineModel } from './models/logline.model';
+import type { SearchQuery } from './models/search-query.model';
 
-type RootFilterQueryKey = "_id" | keyof LogLine;
+type RootFilterQueryKey = '_id' | keyof LogLine;
 type RootFilterQueryValue = Partial<{ $lt: number | string; $gt: number | string }> | string | number;
 type RootFilterQuery = Partial<Record<RootFilterQueryKey, RootFilterQueryValue>>;
 type ParsedQueryFilter = FilterQuery<Record<string, unknown>>;
@@ -20,7 +20,7 @@ export class LogsService {
 
 		const lines = await LogLineModel.find(rootFilterQuery).limit(query.limit).sort({ unix: 1 }).lean().exec();
 
-		return ServiceResponse.success("Search result", lines, StatusCodes.OK);
+		return ServiceResponse.success('Search result', lines, StatusCodes.OK);
 	}
 
 	private parseOuery(queryExpression: string) {
@@ -54,35 +54,35 @@ export class LogsService {
 
 	private queryASTToMongoose(ast: QueryASTNode): ParsedQueryFilter {
 		switch (ast.type) {
-			case "LogicalAnd":
+			case 'LogicalAnd':
 				return { $and: [this.queryASTToMongoose(ast.left), this.queryASTToMongoose(ast.right)] };
 
-			case "LogicalOr":
+			case 'LogicalOr':
 				return { $or: [this.queryASTToMongoose(ast.left), this.queryASTToMongoose(ast.right)] };
 
-			case "Equal": {
+			case 'Equal': {
 				const field = ast.left.value;
 				const value = this.literalToValue(ast.right);
 
 				return { [field]: value };
 			}
 
-			case "NotEqual": {
+			case 'NotEqual': {
 				const field = ast.left.value;
 				const value = this.literalToValue(ast.right);
 				return { [field]: { $ne: value } };
 			}
 
-			case "In": {
+			case 'In': {
 				const field = ast.left.value;
-				if (ast.right.type === "Array") {
+				if (ast.right.type === 'Array') {
 					return {
 						[field]: {
 							$in: ast.right.elements.map(this.literalToValue)
 						}
 					};
 				}
-				if (ast.right.type === "Range") {
+				if (ast.right.type === 'Range') {
 					return {
 						[field]: {
 							$gte: ast.right.start.value,
@@ -94,12 +94,12 @@ export class LogsService {
 				throw new Error(`Unsupported IN right operand: ${ast.right}`);
 			}
 
-			case "NotIn": {
+			case 'NotIn': {
 				const field = ast.left.value;
-				if (ast.right.type === "Array") {
+				if (ast.right.type === 'Array') {
 					return { [field]: { $nin: ast.right.elements.map(this.literalToValue) } };
 				}
-				if (ast.right.type === "Range") {
+				if (ast.right.type === 'Range') {
 					return {
 						[field]: { $not: { $gte: ast.right.start.value, $lte: ast.right.end.value } }
 					};
@@ -114,18 +114,18 @@ export class LogsService {
 
 	private literalToValue(node: LiteralNode): string | number | RegExp {
 		switch (node.type) {
-			case "String":
-				if (node.value.includes("*")) {
-					const regex = `^${node.value.replace(/\./g, "\\.").replace(/\*/g, ".*")}$`;
+			case 'String':
+				if (node.value.includes('*')) {
+					const regex = `^${node.value.replace(/\./g, '\\.').replace(/\*/g, '.*')}$`;
 
 					return new RegExp(regex);
 				}
 				return node.value;
 
-			case "Number":
+			case 'Number':
 				return node.value;
 
-			case "Identifier":
+			case 'Identifier':
 				return node.value;
 
 			default: {

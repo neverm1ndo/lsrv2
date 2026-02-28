@@ -1,21 +1,21 @@
-import { createReadStream } from "node:fs";
-import { open, readFile, stat, writeFile } from "node:fs/promises";
+import { createReadStream } from 'node:fs';
+import { open, readFile, stat, writeFile } from 'node:fs/promises';
 
-import DiffMatchPatch from "diff-match-patch";
-import { StatusCodes } from "http-status-codes";
-import { decodeStream, encodeStream } from "iconv-lite";
+import DiffMatchPatch from 'diff-match-patch';
+import { StatusCodes } from 'http-status-codes';
+import { decodeStream, encodeStream } from 'iconv-lite';
 
-import { mime } from "@lsrv/common/mime";
-import { ServiceResponse } from "@lsrv/common/models";
+import { mime } from '@lsrv/common/mime';
+import { ServiceResponse } from '@lsrv/common/models';
 
-import { buildTree, type FileTreeOptions } from "./ftree";
-import { isBinary } from "./utils/is-binary";
+import { buildTree, type FileTreeOptions } from './ftree';
+import { isBinary } from './utils/is-binary';
 
 const dmp = new DiffMatchPatch();
 
 export class ConfiguratorService {
 	async getFileTree(options: FileTreeOptions) {
-		return ServiceResponse.success("File three", await buildTree(options), StatusCodes.OK);
+		return ServiceResponse.success('File three', await buildTree(options), StatusCodes.OK);
 	}
 
 	async getFileStat(path: string) {
@@ -27,20 +27,20 @@ export class ConfiguratorService {
 				mime: mime(path)
 			};
 
-			return ServiceResponse.success("File stat", fileStat, StatusCodes.OK);
+			return ServiceResponse.success('File stat', fileStat, StatusCodes.OK);
 		} catch (err) {
-			return ServiceResponse.failure("File stat failure", err, StatusCodes.NOT_FOUND);
+			return ServiceResponse.failure('File stat failure', err, StatusCodes.NOT_FOUND);
 		}
 	}
 
 	async getFileStream(path: string) {
-		const BUFFER_SIZE = 512;
+		const BufferSize = 512;
 
-		const rangedBuffer = Buffer.alloc(BUFFER_SIZE);
-		const fileHandle = await open(path, "r");
+		const rangedBuffer = Buffer.alloc(BufferSize);
+		const fileHandle = await open(path, 'r');
 
 		try {
-			const { bytesRead } = await fileHandle.read(rangedBuffer, 0, BUFFER_SIZE, 0);
+			const { bytesRead } = await fileHandle.read(rangedBuffer, 0, BufferSize, 0);
 
 			const sampleBuffer = rangedBuffer.subarray(0, bytesRead);
 			const buffer = sampleBuffer.buffer.slice(
@@ -56,7 +56,7 @@ export class ConfiguratorService {
 				return stream;
 			}
 
-			return stream.pipe(decodeStream("win1251")).pipe(encodeStream("utf8"));
+			return stream.pipe(decodeStream('win1251')).pipe(encodeStream('utf8'));
 		} finally {
 			await fileHandle.close();
 		}
@@ -64,18 +64,18 @@ export class ConfiguratorService {
 
 	async patchFile(patch: { path: string; text: string }) {
 		try {
-			const current = await readFile(patch.path, "utf8");
+			const current = await readFile(patch.path, 'utf8');
 
 			const patches = dmp.patch_fromText(patch.text);
 			const [incoming, results] = dmp.patch_apply(patches, current);
 
 			if (results.some((applied) => !applied)) {
-				throw new Error("Patch did not apply cleanly", { cause: StatusCodes.CONFLICT });
+				throw new Error('Patch did not apply cleanly', { cause: StatusCodes.CONFLICT });
 			}
 
-			await writeFile(patch.path, incoming, "utf-8");
+			await writeFile(patch.path, incoming, 'utf-8');
 
-			return ServiceResponse.success("File patched", null, StatusCodes.OK);
+			return ServiceResponse.success('File patched', null, StatusCodes.OK);
 		} catch (err) {
 			return ServiceResponse.failure((err as Error).message, err, (err as Error).cause as number);
 		}

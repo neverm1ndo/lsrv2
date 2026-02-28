@@ -1,4 +1,4 @@
-import type { User } from "./models/user.model";
+import type { User } from './models/user.model';
 
 export enum Workgroup {
 	CHALLENGER = 9,

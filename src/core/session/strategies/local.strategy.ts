@@ -1,19 +1,19 @@
-import md5 from "md5";
+import md5 from 'md5';
 import {
 	Strategy as LocalStrategy,
 	type IStrategyOptions as LocalStrategyOptions,
 	type IVerifyOptions as VerifyOptions
-} from "passport-local";
-import z, { ZodError } from "zod";
+} from 'passport-local';
+import z, { ZodError } from 'zod';
 
-import { isUserInWorkGroup, USER_QUERY_BY_EMAIL, UserSchema } from "@lsrv/api/user";
-import { DB_POOL } from "@lsrv/core/db";
+import { isUserInWorkGroup, USER_QUERY_BY_EMAIL, UserSchema } from '@lsrv/api/user';
+import { DB_POOL } from '@lsrv/core/db';
 
 const PWD_OFFSET = 32;
 
 const checkPassword = (pass?: string, hash?: string): boolean => {
-	if (!pass || typeof pass !== "string") return false;
-	if (!hash || typeof hash !== "string" || hash.length <= PWD_OFFSET) return false;
+	if (!pass || typeof pass !== 'string') return false;
+	if (!hash || typeof hash !== 'string' || hash.length <= PWD_OFFSET) return false;
 
 	const salt = hash.slice(0, hash.length - PWD_OFFSET);
 	const realPassword = hash.slice(hash.length - PWD_OFFSET);
@@ -23,8 +23,8 @@ const checkPassword = (pass?: string, hash?: string): boolean => {
 };
 
 const localStrategyOptions: LocalStrategyOptions = {
-	usernameField: "email",
-	passwordField: "password"
+	usernameField: 'email',
+	passwordField: 'password'
 };
 
 export const localStrategy: LocalStrategy = new LocalStrategy(
@@ -37,25 +37,25 @@ export const localStrategy: LocalStrategy = new LocalStrategy(
 		void (async () => {
 			try {
 				if (!email || !password) {
-					return void done(null, false, { message: "Missing credentials" });
+					return void done(null, false, { message: 'Missing credentials' });
 				}
 				const [userQueryResult] = await DB_POOL.query(USER_QUERY_BY_EMAIL, [email]);
 
 				const userWithGroups = z.array(UserSchema).parse(userQueryResult);
 
 				if (!userWithGroups.length) {
-					return void done(null, false, { message: "User not found" });
+					return void done(null, false, { message: 'User not found' });
 				}
 
 				const [user] = userWithGroups;
 				const { id, main_group, username, password: storedHash, permissions, avatar } = user;
 
 				if (!checkPassword(password, storedHash)) {
-					return void done(null, false, { message: "Wrong password" });
+					return void done(null, false, { message: 'Wrong password' });
 				}
 
 				if (!isUserInWorkGroup(user)) {
-					return void done(null, false, { message: "User is not in workgroup" });
+					return void done(null, false, { message: 'User is not in workgroup' });
 				}
 
 				return void done(
@@ -67,17 +67,17 @@ export const localStrategy: LocalStrategy = new LocalStrategy(
 						permissions,
 						avatar
 					},
-					{ message: "Success" }
+					{ message: 'Success' }
 				);
 			} catch (error) {
 				console.log(error);
 				const err = {
-					message: ""
+					message: ''
 				};
 
 				if (error instanceof ZodError) {
 					console.error(error);
-					err.message = error.issues.map(({ message }) => message).join(". ");
+					err.message = error.issues.map(({ message }) => message).join('. ');
 				}
 
 				return void done(err);

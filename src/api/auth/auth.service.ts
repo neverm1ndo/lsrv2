@@ -1,13 +1,13 @@
-import type { Request } from "express";
-import { StatusCodes } from "http-status-codes";
-import { sign } from "jsonwebtoken";
-import passport from "passport";
+import type { Request } from 'express';
+import { StatusCodes } from 'http-status-codes';
+import { sign } from 'jsonwebtoken';
+import passport from 'passport';
 
-import { env } from "@lsrv/common/environment";
-import { logger } from "@lsrv/logger";
-import { ServiceResponse } from "@lsrv/models/response";
+import { env } from '@lsrv/common/environment';
+import { logger } from '@lsrv/logger';
+import { ServiceResponse } from '@lsrv/models/response';
 
-import type { UserSession } from "./models/session.model";
+import type { UserSession } from './models/session.model';
 
 type SessionResponse = ServiceResponse<UserSession | null | unknown>;
 
@@ -16,10 +16,10 @@ export class AuthService {
 		const { promise: authentication, resolve, reject } = Promise.withResolvers<SessionResponse>();
 		const secret = env.LSRV_SECRET;
 
-		passport.authenticate("local", { session: false }, (err: unknown, user: UserSession) => {
+		passport.authenticate('local', { session: false }, (err: unknown, user: UserSession) => {
 			if (err || !user || !secret) {
 				return reject({
-					message: "An error occured",
+					message: 'An error occured',
 					err,
 					status: StatusCodes.UNAUTHORIZED
 				});
@@ -28,7 +28,7 @@ export class AuthService {
 			req.login(user, { session: false }, (err) => {
 				if (err)
 					reject({
-						message: "Unexpected error",
+						message: 'Unexpected error',
 						body: err,
 						status: StatusCodes.INTERNAL_SERVER_ERROR
 					});
@@ -54,7 +54,7 @@ export class AuthService {
 
 			return userAuthentication;
 		} catch (err) {
-			logger.error("Authentication error");
+			logger.error('Authentication error');
 
 			const { message, body, status } = err as { message: string; body: unknown | null; status: StatusCodes };
 

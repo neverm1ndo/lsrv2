@@ -1,6 +1,6 @@
-import { basename, dirname, join } from "node:path";
+import { basename, dirname, join } from 'node:path';
 
-import fg from "fast-glob";
+import fg from 'fast-glob';
 
 export interface TreeNode {
 	name: string;
@@ -15,7 +15,7 @@ export interface FileTreeOptions {
 }
 
 export const buildTree = async (options: FileTreeOptions): Promise<TreeNode> => {
-	const entries = await fg("**/*", {
+	const entries = await fg('**/*', {
 		cwd: options.rootDir,
 		onlyFiles: false,
 		followSymbolicLinks: false,
@@ -33,7 +33,7 @@ export const buildTree = async (options: FileTreeOptions): Promise<TreeNode> => 
 	};
 
 	const map = new Map<string, TreeNode>();
-	map.set(".", root);
+	map.set('.', root);
 
 	for (const entry of entries) {
 		const relPath = entry.path;
@@ -51,7 +51,7 @@ export const buildTree = async (options: FileTreeOptions): Promise<TreeNode> => 
 		if (entry.dirent.isDirectory()) node.children = [];
 
 		const parentPath = dirname(relPath);
-		const parentNode = map.get(parentPath === "." ? "." : parentPath);
+		const parentNode = map.get(parentPath === '.' ? '.' : parentPath);
 
 		if (parentNode?.children) {
 			parentNode.children.push(node);

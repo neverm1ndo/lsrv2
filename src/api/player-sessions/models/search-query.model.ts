@@ -1,4 +1,4 @@
-import z from "zod";
+import z from 'zod';
 
 const DEFAULT_LIMIT = 100;
 

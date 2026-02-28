@@ -19,3 +19,10 @@ diary/*
 *.d
 *.greenlockrc
 support/*
+
+
+
+.nx/cache
+.nx/workspace-data
+vite.config.*.timestamp*
+vitest.config.*.timestamp*

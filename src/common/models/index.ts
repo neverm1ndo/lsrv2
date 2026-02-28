@@ -1,2 +1,2 @@
-export * from "./dummy";
-export * from "./service-response";
+export * from './dummy';
+export * from './service-response';

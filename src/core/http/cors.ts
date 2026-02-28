@@ -1,6 +1,6 @@
-import type { CorsOptions } from "cors";
+import type { CorsOptions } from 'cors';
 
-import { env } from "@lsrv/common/environment";
+import { env } from '@lsrv/common/environment';
 
 const { CORS_WHITELIST } = env;
 
@@ -9,12 +9,12 @@ function checkCorsOrigin(origin: string | undefined, callback: (error: Error | n
 		return void callback(null, true);
 	}
 
-	callback(new Error("Not allowed by CORS"));
+	callback(new Error('Not allowed by CORS'));
 }
 
 export const CORS_CONFIG: CorsOptions = {
 	credentials: true,
-	methods: "GET,HEAD,OPTIONS,PUT,PATCH,POST,DELETE",
+	methods: 'GET,HEAD,OPTIONS,PUT,PATCH,POST,DELETE',
 	origin: checkCorsOrigin,
 	preflightContinue: false,
 	optionsSuccessStatus: 204
