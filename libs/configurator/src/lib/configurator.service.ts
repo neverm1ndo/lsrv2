@@ -44,6 +44,7 @@ export class ConfiguratorService {
 		const rangedBuffer = Buffer.alloc(BufferSize);
 
 		let fileHandle: FileHandle | undefined;
+		let streamCreated = false;
 		try {
 			fileHandle = await open(path, 'r');
 		} catch (err) {
@@ -64,7 +65,8 @@ export class ConfiguratorService {
 
 			const isBinaryFile = isBinary(buffer);
 
-			const stream = createReadStream(path);
+			const stream = createReadStream('', { fd: fileHandle.fd, start: 0 });
+			streamCreated = true;
 
 			if (isBinaryFile) {
 				return new StreamableFile(stream);
@@ -72,10 +74,12 @@ export class ConfiguratorService {
 
 			return new StreamableFile(stream.pipe(decodeStream('win1251')).pipe(encodeStream('utf8')) as unknown as Readable);
 		} finally {
-			await fileHandle.close();
+			// Only close if we didn't hand off the fd to createReadStream
+			if (fileHandle && !streamCreated) {
+				await fileHandle.close();
+			}
 		}
 	}
-
 	async patchFile(patch: { path: string; text: string }) {
 		try {
 			const current = await readFile(patch.path, 'utf8');

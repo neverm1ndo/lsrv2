@@ -9,15 +9,15 @@ import {
 	NotFoundException,
 	Patch,
 	Query,
-	Req,
 	Res,
 	type StreamableFile,
 	UseGuards
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import type { Request, Response } from 'express';
+import type { Response } from 'express';
 
 import { Workgroup } from '@lsrv/api/user';
+import { CurrentUser } from '@lsrv/common/decorators';
 import { env } from '@lsrv/common/environment';
 import { mime } from '@lsrv/common/mime';
 import { ZodValidationPipe } from '@lsrv/common/validation';
@@ -25,20 +25,25 @@ import { ZodValidationPipe } from '@lsrv/common/validation';
 import type { ConfiguratorService } from './configurator.service';
 import { FileRequestSchema, type FileStatQuery, type PatchFileDto, PatchFileSchema } from './dto/file.dto';
 
+interface ICurrentUser {
+	main_group?: number;
+}
+
 @Controller('lars/configurator')
 @UseGuards(AuthGuard('jwt'))
 export class ConfiguratorController {
 	constructor(private readonly configuratorService: ConfiguratorService) {}
 
-	private getRootDir(req: Request): string {
-		// biome-ignore lint/style/useNamingConvention: matching database model
-		const user = (req as unknown as { user?: { main_group?: number } }).user;
+	private getRootDir(user: ICurrentUser): string {
 		return user?.main_group === Workgroup.DEV ? env.ROOT_PATH : env.CONFIGURATOR_PATH;
 	}
 
 	@Get('ft')
-	async getFileThree(@Query(new ZodValidationPipe(FileRequestSchema)) query: FileStatQuery, @Req() req: Request) {
-		const rootDir = this.getRootDir(req);
+	async getFileThree(
+		@Query(new ZodValidationPipe(FileRequestSchema)) query: FileStatQuery,
+		@CurrentUser() user: ICurrentUser
+	) {
+		const rootDir = this.getRootDir(user);
 		const fullPath = join(rootDir, query.path || '');
 
 		return this.configuratorService.getFileTree({
@@ -48,8 +53,11 @@ export class ConfiguratorController {
 	}
 
 	@Get('fs')
-	async getFileStat(@Query(new ZodValidationPipe(FileRequestSchema)) query: FileStatQuery, @Req() req: Request) {
-		const rootDir = this.getRootDir(req);
+	async getFileStat(
+		@Query(new ZodValidationPipe(FileRequestSchema)) query: FileStatQuery,
+		@CurrentUser() user: ICurrentUser
+	) {
+		const rootDir = this.getRootDir(user);
 		const fullPath = join(rootDir, query.path || '');
 
 		return this.configuratorService.getFileStat(fullPath);
@@ -58,10 +66,10 @@ export class ConfiguratorController {
 	@Get('file')
 	async getFile(
 		@Query(new ZodValidationPipe(FileRequestSchema)) query: FileStatQuery,
-		@Req() req: Request,
+		@CurrentUser() user: ICurrentUser,
 		@Res({ passthrough: true }) res: Response
 	): Promise<StreamableFile> {
-		const rootDir = this.getRootDir(req);
+		const rootDir = this.getRootDir(user);
 		const fullPath = join(rootDir, query.path || '');
 		const filename = basename(fullPath);
 
@@ -91,9 +99,9 @@ export class ConfiguratorController {
 	async patchFile(
 		@Query(new ZodValidationPipe(FileRequestSchema)) query: FileStatQuery,
 		@Body(new ZodValidationPipe(PatchFileSchema)) body: PatchFileDto,
-		@Req() req: Request
+		@CurrentUser() user: ICurrentUser
 	) {
-		const rootDir = this.getRootDir(req);
+		const rootDir = this.getRootDir(user);
 		const fullPath = join(rootDir, query.path || '', body.path || '');
 
 		return this.configuratorService.patchFile({ path: fullPath, text: body.text });
