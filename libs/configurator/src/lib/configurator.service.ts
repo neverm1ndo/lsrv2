@@ -12,11 +12,10 @@ import {
 import DiffMatchPatch from 'diff-match-patch';
 import { decodeStream, encodeStream } from 'iconv-lite';
 
-import { mime } from '@lsrv/common/mime';
+import { isBinary, mime } from '@lsrv/shared/file-format';
 
 import type { FileTreeOptions, TreeNode } from './interfaces/ftree.interface';
 import { buildTree } from './utils/ftree';
-import { isBinary } from './utils/is-binary';
 
 const dmp = new DiffMatchPatch();
 

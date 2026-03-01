@@ -1,0 +1,19 @@
+{
+  "name": "lsrv-shared-file-format",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/shared/file-format/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/shared/file-format",
+        "main": "libs/shared/file-format/src/index.ts",
+        "tsConfig": "libs/shared/file-format/tsconfig.lib.json",
+        "assets": ["libs/shared/file-format/*.md"]
+      }
+    }
+  },
+  "tags": ["type:util"]
+}
