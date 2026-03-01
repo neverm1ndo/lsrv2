@@ -12,7 +12,7 @@ export const configSchema: z.ZodObject<any> = z.object({
 		httpPort: z.coerce.number().int().positive().default(DEFAULT_HTTP_PORT),
 		secret: z.string(),
 		cors: z.object({
-			origin: z.string().url().default('https://localhost:8443'),
+			origin: z.url().default('https://localhost:8443'),
 			whitelist: z.string()
 		}),
 		rateLimit: z.object({

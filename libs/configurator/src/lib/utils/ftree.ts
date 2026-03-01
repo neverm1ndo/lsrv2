@@ -2,17 +2,7 @@ import { basename, dirname, join } from 'node:path';
 
 import fg from 'fast-glob';
 
-export interface TreeNode {
-	name: string;
-	path: string;
-	children?: TreeNode[];
-}
-
-export interface FileTreeOptions {
-	rootDir: string;
-	ignore?: string[];
-	dot?: boolean;
-}
+import type { FileTreeOptions, TreeNode } from '../interfaces/ftree.interface';
 
 export const buildTree = async (options: FileTreeOptions): Promise<TreeNode> => {
 	const entries = await fg('**/*', {

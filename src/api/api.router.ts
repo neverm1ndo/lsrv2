@@ -2,7 +2,6 @@ import { Router } from 'express';
 import passport from 'passport';
 
 // import { authRouter } from "./auth"; // Handled by NestJS AuthController
-import { configuratorRouter } from './configurator/configurator.router';
 import { healthRouter } from './health';
 import { logsRouter } from './player-sessions/logs.router';
 
@@ -16,6 +15,5 @@ router.use('/health-check', healthRouter);
 router.use('/lars', passport.authenticate('jwt', { session: false }), larsRouter);
 
 larsRouter.use('/player-sessions', logsRouter);
-larsRouter.use('/configurator', configuratorRouter);
 
 export { router };

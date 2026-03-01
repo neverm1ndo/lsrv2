@@ -28,7 +28,8 @@
       "@lsrv/auth/feature": ["../libs/auth/feature/src/index.ts"],
       "@lsrv/auth/data-access": ["../libs/auth/data-access/src/index.ts"],
       "@lsrv/extensions": ["../tools/extensions/src/index.ts"],
-      "config": ["libs/config/src/index.ts"]
+      "config": ["../libs/config/src/index.ts"],
+      "@lsrv/configurator": ["../libs/configurator/src/index.ts"]
     },
     "moduleResolution": "bundler",
     "outDir": "dist",

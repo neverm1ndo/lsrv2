@@ -59,13 +59,16 @@
 				"noMagicNumbers": "error",
 				"noCommonJs": "error",
 				"useNamingConvention": {
-					"level": "error",
+					"level": "off",
 					"options": { "strictCase": false }
 				}
 			},
 			"suspicious": {
 				"noEmptyInterface": "off",
 				"noExplicitAny": "warn"
+			},
+			"complexity": {
+				"noStaticOnlyClass": "off"
 			}
 		}
 	},

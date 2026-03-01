@@ -4,7 +4,7 @@ import { OBSERVER_OPTIONS, type ObserverOptions, ObserverService } from './obser
 
 @Module({})
 export class ObserverModule {
-	register(options?: ObserverOptions): DynamicModule {
+	static register(options?: ObserverOptions): DynamicModule {
 		return {
 			module: ObserverModule,
 			providers: [

@@ -1,43 +1,57 @@
 import { createReadStream } from 'node:fs';
-import { open, readFile, stat, writeFile } from 'node:fs/promises';
+import { type FileHandle, open, readFile, stat, writeFile } from 'node:fs/promises';
+import type { Readable } from 'node:stream';
 
+import {
+	ConflictException,
+	Injectable,
+	InternalServerErrorException,
+	NotFoundException,
+	StreamableFile
+} from '@nestjs/common';
 import DiffMatchPatch from 'diff-match-patch';
-import { StatusCodes } from 'http-status-codes';
 import { decodeStream, encodeStream } from 'iconv-lite';
 
 import { mime } from '@lsrv/common/mime';
-import { ServiceResponse } from '@lsrv/common/models';
 
-import { buildTree, type FileTreeOptions } from './ftree';
+import type { FileTreeOptions, TreeNode } from './interfaces/ftree.interface';
+import { buildTree } from './utils/ftree';
 import { isBinary } from './utils/is-binary';
 
 const dmp = new DiffMatchPatch();
 
+@Injectable()
 export class ConfiguratorService {
-	async getFileTree(options: FileTreeOptions) {
-		return ServiceResponse.success('File three', await buildTree(options), StatusCodes.OK);
+	async getFileTree(options: FileTreeOptions): Promise<TreeNode> {
+		return buildTree(options);
 	}
 
 	async getFileStat(path: string) {
 		try {
 			const stats = await stat(path);
-			const fileStat = {
+			return {
 				size: stats.size,
 				mtime: stats.mtime,
 				mime: mime(path)
 			};
-
-			return ServiceResponse.success('File stat', fileStat, StatusCodes.OK);
 		} catch (err) {
-			return ServiceResponse.failure('File stat failure', err, StatusCodes.NOT_FOUND);
+			throw new NotFoundException('File stat failure', { cause: err });
 		}
 	}
 
 	async getFileStream(path: string) {
 		const BufferSize = 512;
-
 		const rangedBuffer = Buffer.alloc(BufferSize);
-		const fileHandle = await open(path, 'r');
+
+		let fileHandle: FileHandle | undefined;
+		try {
+			fileHandle = await open(path, 'r');
+		} catch (err) {
+			if ((err as NodeJS.ErrnoException).code === 'ENOENT') {
+				throw new NotFoundException('File not found', { cause: err });
+			}
+			throw new InternalServerErrorException('Error opening file', { cause: err });
+		}
 
 		try {
 			const { bytesRead } = await fileHandle.read(rangedBuffer, 0, BufferSize, 0);
@@ -53,10 +67,10 @@ export class ConfiguratorService {
 			const stream = createReadStream(path);
 
 			if (isBinaryFile) {
-				return stream;
+				return new StreamableFile(stream);
 			}
 
-			return stream.pipe(decodeStream('win1251')).pipe(encodeStream('utf8'));
+			return new StreamableFile(stream.pipe(decodeStream('win1251')).pipe(encodeStream('utf8')) as unknown as Readable);
 		} finally {
 			await fileHandle.close();
 		}
@@ -70,16 +84,17 @@ export class ConfiguratorService {
 			const [incoming, results] = dmp.patch_apply(patches, current);
 
 			if (results.some((applied) => !applied)) {
-				throw new Error('Patch did not apply cleanly', { cause: StatusCodes.CONFLICT });
+				throw new ConflictException('Patch did not apply cleanly');
 			}
 
 			await writeFile(patch.path, incoming, 'utf-8');
 
-			return ServiceResponse.success('File patched', null, StatusCodes.OK);
+			return { success: true };
 		} catch (err) {
-			return ServiceResponse.failure((err as Error).message, err, (err as Error).cause as number);
+			if (err instanceof ConflictException) {
+				throw err;
+			}
+			throw new InternalServerErrorException((err as Error).message, { cause: err });
 		}
 	}
 }
-
-export const configuratorService = new ConfiguratorService();

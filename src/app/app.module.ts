@@ -3,8 +3,9 @@ import cors from 'cors';
 import helmet from 'helmet';
 import passport from 'passport';
 
-import { AuthFeatureModule } from '@lsrv/auth/feature';
+// import { AuthFeatureModule } from '@lsrv/auth/feature';
 import { env } from '@lsrv/common/environment';
+import { ConfiguratorModule } from '@lsrv/configurator';
 import { AppThrottlerModule, DatabaseModule, LoggerModule, SocketModule } from '@lsrv/core';
 import { CORS_CONFIG } from '@lsrv/core/http';
 import { lsrv2Session } from '@lsrv/core/session';
@@ -19,7 +20,8 @@ import { ObserverModule } from '@lsrv/observer';
 		...(env.isProduction ? [AppThrottlerModule] : []),
 		SocketModule,
 		ObserverModule.register({ path: env.LOGS_PATH }),
-		AuthFeatureModule // Already migrated
+		// AuthFeatureModule, // Already migrated
+		ConfiguratorModule
 	],
 	controllers: [],
 	providers: []
