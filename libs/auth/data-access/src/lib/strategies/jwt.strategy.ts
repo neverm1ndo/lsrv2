@@ -1,9 +1,10 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
+import type { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
-import { ZodError, z } from 'zod';
+import { z } from 'zod';
 
-import { isUserInWorkGroup, USER_QUERY, type User, UserSchema, UserWithPermissionsSchema } from '@lsrv/api/user';
+import { isUserInWorkGroup, type User, UserSchema, UserWithPermissionsSchema } from '@lsrv/api/user';
 import { env } from '@lsrv/common/environment';
 import { DB_POOL } from '@lsrv/core/db';
 
@@ -16,40 +17,67 @@ const JwtUserPayloadSchema = UserWithPermissionsSchema.pick({
 	permissions: true
 });
 
+const JWT_USER_QUERY = `
+    SELECT
+        ug.user_id AS id,
+        u.username,
+        u.user_avatar AS avatar,
+        u.group_id AS main_group,
+        GROUP_CONCAT(DISTINCT ug.group_id ORDER BY ug.group_id SEPARATOR ',') AS permissions,
+        u.user_email AS email
+    FROM phpbb_user_group AS ug
+    JOIN phpbb_users AS u
+        ON u.user_id = ug.user_id
+    WHERE ug.user_id = ?
+        AND ug.group_id BETWEEN 9 AND 14
+    GROUP BY
+        u.user_id,
+        u.username,
+        u.user_avatar,
+        u.group_id,
+        u.user_email;
+`;
+
+const SafeUserSchema = UserSchema.omit({ password: true });
+
 if (!env.LSRV_SECRET) {
 	throw new Error('Environment variable LSRV_SECRET is not defined - JWT strategy cannot be initialized');
 }
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-	constructor() {
+	constructor(private readonly configService: ConfigService) {
 		super({
 			jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
 			ignoreExpiration: false,
-			secretOrKey: env.LSRV_SECRET
+			secretOrKey: env.LSRV_SECRET,
+			algorithms: ['HS256']
 		});
 	}
 
-	async validate(payload: JwtUserPayload): Promise<any> {
+	async validate(
+		payload: JwtUserPayload
+	): Promise<{ id: number; username: string; main_group: number; permissions: number[]; avatar: string | null }> {
 		try {
 			if (!payload || typeof payload.id === 'undefined') {
-				throw new UnauthorizedException('Invalid token payload');
+				throw new UnauthorizedException();
 			}
 
 			const { id } = payload;
-			const [userQueryResult] = await DB_POOL.query(USER_QUERY, [id]);
-			const userWithGroups: User[] = z.array(UserSchema).parse(userQueryResult);
+			const [userQueryResult] = await DB_POOL.query(JWT_USER_QUERY, [id]);
+			const userWithGroups = z.array(SafeUserSchema).parse(userQueryResult);
 
 			if (!userWithGroups.length) {
-				throw new UnauthorizedException('User not found');
+				throw new UnauthorizedException();
 			}
 
 			const [user] = userWithGroups;
-			const { username, main_group, avatar, permissions } = user;
 
-			if (!isUserInWorkGroup(user)) {
-				throw new UnauthorizedException('User is not in workgroup');
+			if (!isUserInWorkGroup(user as User)) {
+				throw new UnauthorizedException();
 			}
+
+			const { username, main_group, avatar, permissions } = user as User;
 
 			return {
 				id,
@@ -58,14 +86,8 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 				permissions,
 				avatar
 			};
-		} catch (error) {
-			if (error instanceof ZodError) {
-				throw new UnauthorizedException('Malformed user data');
-			}
-			if (error instanceof UnauthorizedException) {
-				throw error;
-			}
-			throw new UnauthorizedException('Authentication error');
+		} catch (_error) {
+			throw new UnauthorizedException();
 		}
 	}
 }

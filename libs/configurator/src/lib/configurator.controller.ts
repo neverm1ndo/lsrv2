@@ -19,8 +19,8 @@ import type { Response } from 'express';
 import { Workgroup } from '@lsrv/api/user';
 import { CurrentUser } from '@lsrv/common/decorators';
 import { env } from '@lsrv/common/environment';
-import { mime } from '@lsrv/common/mime';
 import { ZodValidationPipe } from '@lsrv/common/validation';
+import { mime } from '@lsrv/shared/file-format';
 
 import type { ConfiguratorService } from './configurator.service';
 import { FileRequestSchema, type FileStatQuery, type PatchFileDto, PatchFileSchema } from './dto/file.dto';

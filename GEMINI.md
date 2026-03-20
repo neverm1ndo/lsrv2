@@ -5,6 +5,11 @@ Target Stack: NestJS, TypeORM, TypeScript, NX Monorepo.
 Patterns: DDD, Repository Pattern.
 Instructions: Always check /libs for existing types before creating new ones.
 
+# Migration Rules
+
+Директория `/src` и все вложенные в нее поддиректории и файлы относятся к файлам старой версии
+сервера использующего Express
+
 # Permissions
 
 - Shell Execution: Allowed (without confirmation)
