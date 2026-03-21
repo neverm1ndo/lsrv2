@@ -2,6 +2,7 @@ import { randomUUID } from 'node:crypto';
 import { createReadStream, createWriteStream } from 'node:fs';
 import { mkdir, stat, unlink } from 'node:fs/promises';
 import { basename, extname, join } from 'node:path';
+import type { Readable } from 'node:stream';
 import { pipeline } from 'node:stream/promises';
 import { createGunzip, createGzip, type Gunzip, type Gzip } from 'node:zlib';
 
@@ -43,6 +44,12 @@ export class BackupService implements OnModuleInit {
 		} catch (error) {
 			this.logger.error(`Failed to create backup directory: ${(error as Error).message}`);
 		}
+	}
+
+	async findAll(): Promise<BackupEntity[]> {
+		return this.backupRepository.find({
+			order: { unix: 'DESC' }
+		});
 	}
 
 	// Fallback utility functions previously from @shared
@@ -203,7 +210,7 @@ export class BackupService implements OnModuleInit {
 		await this.backupRepository.delete({ hash });
 	}
 
-	async getBackupFile(hash: string): Promise<NodeJS.ReadableStream> {
+	async getBackupFile(hash: string): Promise<Readable> {
 		const backup = await this.backupRepository.findOne({ where: { hash } });
 		if (!backup) {
 			throw new NotFoundException('BACKUP_IS_NOT_EXISTS');
@@ -214,7 +221,7 @@ export class BackupService implements OnModuleInit {
 			// Проверяем существование файла
 			await stat(filepath);
 
-			let stream: NodeJS.ReadableStream = createReadStream(filepath);
+			let stream: Readable = createReadStream(filepath);
 
 			if (backup.file.compressed) {
 				const gunzip = createGunzip();
@@ -223,7 +230,7 @@ export class BackupService implements OnModuleInit {
 
 			// Если файл текстовый, применяем трансформацию ANSI -> UTF8 на лету
 			if (!backup.file.binary) {
-				stream = stream.pipe(iconv.decodeStream('win1251')).pipe(iconv.encodeStream('utf8'));
+				stream = stream.pipe(iconv.decodeStream('win1251')).pipe(iconv.encodeStream('utf8')) as unknown as Readable;
 			}
 
 			return stream;
