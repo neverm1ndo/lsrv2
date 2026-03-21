@@ -1,26 +1,26 @@
 {
-  "$schema": "http://json-schema.org/schema",
-  "id": "Library",
-  "title": "Custom Library Generator",
-  "type": "object",
-  "properties": {
-    "name": {
-      "type": "string",
-      "description": "The name of the library",
-      "$default": {
-        "$source": "argv",
-        "index": 0
-      },
-      "x-prompt": "What name would you like to use?"
-    },
-    "directory": {
-      "type": "string",
-      "description": "A directory where the project is placed"
-    },
-    "tags": {
-      "type": "string",
-      "description": "Tags to add to the project (comma separated)"
-    }
-  },
-  "required": ["name"]
+	"$schema": "http://json-schema.org/schema",
+	"id": "Library",
+	"title": "Custom Library Generator",
+	"type": "object",
+	"properties": {
+		"name": {
+			"type": "string",
+			"description": "The name of the library",
+			"$default": {
+				"$source": "argv",
+				"index": 0
+			},
+			"x-prompt": "What name would you like to use?"
+		},
+		"directory": {
+			"type": "string",
+			"description": "A directory where the project is placed"
+		},
+		"tags": {
+			"type": "string",
+			"description": "Tags to add to the project (comma separated)"
+		}
+	},
+	"required": ["name"]
 }

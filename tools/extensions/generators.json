@@ -1,14 +1,14 @@
 {
-  "generators": {
-    "library": {
-      "factory": "./src/generators/library/library",
-      "schema": "./src/generators/library/schema.json",
-      "description": "library generator"
-    },
-    "application": {
-      "factory": "./src/generators/application/application",
-      "schema": "./src/generators/application/schema.json",
-      "description": "application generator"
-    }
-  }
+	"generators": {
+		"library": {
+			"factory": "./src/generators/library/library",
+			"schema": "./src/generators/library/schema.json",
+			"description": "library generator"
+		},
+		"application": {
+			"factory": "./src/generators/application/application",
+			"schema": "./src/generators/application/schema.json",
+			"description": "application generator"
+		}
+	}
 }

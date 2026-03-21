@@ -1,12 +1,12 @@
 export function bsplit(buffer: Buffer, delimiter: Buffer): Buffer[] {
 	if (!Buffer.isBuffer(buffer)) {
-		throw new TypeError("buffer must be a Buffer");
+		throw new TypeError('buffer must be a Buffer');
 	}
 	if (!Buffer.isBuffer(delimiter)) {
-		throw new TypeError("delimiter must be a Buffer");
+		throw new TypeError('delimiter must be a Buffer');
 	}
 	if (delimiter.length === 0) {
-		throw new Error("delimiter must not be empty");
+		throw new Error('delimiter must not be empty');
 	}
 
 	if (buffer.length === 0) {

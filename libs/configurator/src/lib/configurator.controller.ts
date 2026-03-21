@@ -22,7 +22,7 @@ import { env } from '@lsrv/common/environment';
 import { ZodValidationPipe } from '@lsrv/common/validation';
 import { mime } from '@lsrv/shared/file-format';
 
-import type { ConfiguratorService } from './configurator.service';
+import { ConfiguratorService } from './configurator.service';
 import { FileRequestSchema, type FileStatQuery, type PatchFileDto, PatchFileSchema } from './dto/file.dto';
 
 interface ICurrentUser {

@@ -14,13 +14,13 @@ export type QueryASTNode =
 // Logical nodes
 
 export interface LogicalAndNode {
-	type: "LogicalAnd";
+	type: 'LogicalAnd';
 	left: QueryASTNode;
 	right: QueryASTNode;
 }
 
 export interface LogicalOrNode {
-	type: "LogicalOr";
+	type: 'LogicalOr';
 	left: QueryASTNode;
 	right: QueryASTNode;
 }
@@ -28,25 +28,25 @@ export interface LogicalOrNode {
 // Compartions
 
 export interface EqualNode {
-	type: "Equal";
+	type: 'Equal';
 	left: IdentifierNode;
 	right: LiteralNode;
 }
 
 export interface NotEqualNode {
-	type: "NotEqual";
+	type: 'NotEqual';
 	left: IdentifierNode;
 	right: LiteralNode;
 }
 
 export interface InNode {
-	type: "In";
+	type: 'In';
 	left: IdentifierNode;
 	right: ArrayNode | RangeNode;
 }
 
 export interface NotInNode {
-	type: "NotIn";
+	type: 'NotIn';
 	left: IdentifierNode;
 	right: ArrayNode | RangeNode;
 }
@@ -54,12 +54,12 @@ export interface NotInNode {
 // Collections and ranges
 
 export interface ArrayNode {
-	type: "Array";
+	type: 'Array';
 	elements: LiteralNode[];
 }
 
 export interface RangeNode {
-	type: "Range";
+	type: 'Range';
 	start: NumberNode;
 	end: NumberNode;
 }
@@ -69,16 +69,16 @@ export interface RangeNode {
 export type LiteralNode = StringNode | NumberNode | IdentifierNode;
 
 export interface IdentifierNode {
-	type: "Identifier";
+	type: 'Identifier';
 	value: string;
 }
 
 export interface StringNode {
-	type: "String";
+	type: 'String';
 	value: string;
 }
 
 export interface NumberNode {
-	type: "Number";
+	type: 'Number';
 	value: number;
 }

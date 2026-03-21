@@ -58,6 +58,7 @@
 			"style": {
 				"noMagicNumbers": "error",
 				"noCommonJs": "error",
+				"useImportType": "off",
 				"useNamingConvention": {
 					"level": "off",
 					"options": { "strictCase": false }

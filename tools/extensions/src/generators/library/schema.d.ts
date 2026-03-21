@@ -1,5 +1,5 @@
 export interface LibraryGeneratorSchema {
-  name: string;
-  directory?: string;
-  tags?: string;
+	name: string;
+	directory?: string;
+	tags?: string;
 }

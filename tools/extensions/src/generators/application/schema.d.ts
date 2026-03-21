@@ -1,5 +1,5 @@
 export interface ApplicationGeneratorSchema {
-  name: string;
-  directory?: string;
-  tags?: string;
+	name: string;
+	directory?: string;
+	tags?: string;
 }
