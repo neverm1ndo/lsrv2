@@ -48,7 +48,7 @@ export class ConfiguratorController {
 
 		return this.configuratorService.getFileTree({
 			rootDir: fullPath,
-			ignore: ['omp-server', 'samp03srv', 'cr03srv', 'announcr', 'samp-npc']
+			ignore: ['omp-server', 'omp-test', 'samp03srv', 'cr03srv', 'announcr', 'samp-npc']
 		});
 	}
 

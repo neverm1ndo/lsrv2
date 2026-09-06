@@ -1,0 +1,9 @@
+{
+  "name": "lsrv-file-system",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/shared/file-system/src",
+  "projectType": "library",
+  "tags": [],
+  "// targets": "to see all targets run: nx show project lsrv-file-system --web",
+  "targets": {}
+}
